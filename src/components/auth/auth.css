@@ -1,0 +1,63 @@
+body{
+    background-color: rgb(246, 244, 244);
+}
+
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.card{
+    width: 32%;
+    height: 100vh;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+}
+.container .card h1{
+   margin: 20px;
+   text-align: center;
+}
+.container .card .form-group{
+   display: flex;
+   flex-direction: column;
+   width: 300px;
+   margin: 10px 0px; 
+   
+   
+}
+.container .card .form-group label{
+    margin: 2px;
+}
+.container .card .form-group input{
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid grey;
+}
+.container .card .form-group select{
+    padding: 10px;
+    margin: 10px 0px; 
+   
+}
+.btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px 0px;
+  }
+  
+  .btn:hover {
+    background: linear-gradient(135deg, #5b7dfb, #9250e3);
+  }
