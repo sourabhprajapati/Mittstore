@@ -1,0 +1,508 @@
+.home-container {
+  width: 100vw;
+  height: 25vh;
+  overflow-x: hidden;
+
+}
+#strip {
+  text-align: center;
+  background: linear-gradient(to left, #17560E, #013770);
+  color: white;
+  font-weight: 400;
+  height: 6vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#strip p {
+  font-size: 1rem;
+}
+.search {
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.search img {
+  height: 30vh;
+  width: 15vw;
+}
+/* Search Container */
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  padding: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  background-color: #45a049;
+}
+
+/* Search Input */
+.search-input {
+  border: none;
+  outline: none;
+  padding: 10px 15px;
+  border-radius: 25px;
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Search Button */
+.search-button {
+  background: #4caf50;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  margin-left: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s ease;
+}
+
+.search-button:hover {
+  background: #45a049;
+}
+
+.home-container .search .login-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: -8rem;
+}
+.home-container .search .login-btn p {
+  margin-left: 0.7rem;
+}
+.home-container .search .cart {
+  width: 5%;
+  display: flex;
+  justify-content: flex-end; 
+  padding: 1rem;
+}
+.home-container .search .cart img {
+  width: 25px;
+  height: 25px;
+}
+.home-container .search .cart p {
+  margin-left: 0.7rem;
+}
+.home-container .search .hamburger{
+  display: none;
+}
+.nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  padding: 10px 20px;
+  color: white;
+  margin-left: 5rem;
+}
+.nav ul{
+  display: flex;
+  list-style: none;
+}
+.nav .menu-pic{
+  display: flex;
+}
+.nav .menu-pic img{
+  width: 8%;
+  height: 84%;
+}
+.nav .menu-pic a{
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: black;
+  transition: background 0.3s ease;
+}
+
+.nav .menu-pic a:hover {
+  color: rgba(7, 7, 195, 0.901);
+}
+.mittsure-container{
+  width: 100vw;
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mittsure-container .container1{
+    width: 70% ;
+    height: 80%;
+    background-color: #4caf50;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+} 
+.mittsure-container .container1 img{
+  width: 22%;
+  height: 84%;
+  border-radius: 0.7vw;
+}
+.mittsure-container .container1 .title2{
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1vw;
+}
+.mittsure-container .container1 .title2 h1{
+  color: white;
+  line-height: 3vw;
+  
+}
+.mittsure-container .container1 .title2 button{
+  padding: 0.5vw;
+  color: green;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+
+/* Breakpoints */
+
+/* Large (LG) - laptop*/
+@media (max-width: 1600px){
+  .nav .menu-pic img {
+    width: 13%;
+    height: 64%;
+  }
+}
+@media (max-width: 1200px) {
+
+  .home-container {
+    width: 100vw;
+    height: 30vh;
+    overflow-x: hidden;
+  
+  }
+  .home-container .search .login-btn {
+    display: flex;
+    margin-right: -8rem;
+    justify-content: center;
+    align-content: center;
+  }
+  .home-container .search .login-btn p {
+    margin-left: 0.7rem;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+  }
+  .home-container .search .cart p {
+    margin-left: 0.7rem;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+  }
+  .search {
+    width: 88vw;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 5rem;
+  }
+  .home-container .search .cart {
+    display: flex;
+    padding: 1rem;
+    margin-left: 6rem;
+  }
+  .home-container .search .hamburger{
+    display: none;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0px;
+    color: white;
+    margin-left: 0rem;
+  }
+  .nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+  .nav .menu-pic {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+  .nav .menu-pic img {
+    width: 15%;
+    height: 46%;
+  }
+  .nav .menu-pic a {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: black;
+    transition: background 0.3s ease;
+    font-size: 0.7rem;
+
+  }
+  .mittsure-container .container1 {
+    width: 87%;
+    height: 80%;
+    background-color: #4caf50;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .mittsure-container .container1 img {
+    width: 27%;
+    height: 84%;
+    border-radius: 0.7vw;
+  }
+  .mittsure-container .container1 .title2 {
+    width: 49%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 4vw;
+  }
+  .mittsure-container .container1 .title2 button {
+    padding: 0.8vw;
+    color: green;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+}
+/* Medium (MD) - Tablets */
+@media (max-width: 992px) {
+  .home-container {
+    width: 100vw;
+    height: 20vh;
+    overflow-x: hidden;
+  
+  }
+  #strip p {
+    font-size: 0.7rem;
+  }
+  .home-container .search .hamburger{
+    display: block;
+  }
+  .home-container .search .cart {
+    display: none;
+    
+  }
+  .home-container .search .login-btn {
+    display: none;
+   
+  }
+  .search {
+    width: 88vw;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 3rem;
+  }
+  .search-input {
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    flex-grow: 1;
+    font-size: 11px;
+    color: #333;
+  }
+  .search-container {
+    display: flex;
+    align-items: center;
+    background: #fff;
+      background-color: rgb(255, 255, 255);
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    padding: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 44%;
+    background-color: #45a049;
+  }
+  .nav  {
+    display:none;
+    
+  }
+  .nav .menu-pic a {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: black;
+    transition: background 0.3s ease;
+    font-size: .5rem;
+  }
+  .hamburger button {
+    background-color: transparent; /* Transparent background */
+    border: none; /* Remove default border */
+    cursor: pointer; /* Pointer cursor for interactivity */
+    font-size: 1rem; /* Icon size */
+    color: #065dbb; /* Icon color */
+    padding: 10px; /* Space around the icon */
+    border-radius: 50%; /* Circle button */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .hamburger button:hover {
+    background-color: rgba(0, 123, 255, 0.2); /* Light blue background on hover */
+    transform: scale(1.1); /* Slight zoom effect */
+  }
+  
+  .hamburger button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Add a glowing outline */
+  }
+  
+  .hamburger button:active {
+    transform: scale(0.95); /* Slight shrink effect on click */
+    background-color: rgba(0, 123, 255, 0.3); /* Darker blue for click */
+  }
+ .custom-drawer {
+   width: 250px;
+  }
+  .custom-drawer .title{
+    padding: 1rem;
+    text-align: center;
+    background-color: #ECECEB;
+    font-weight: bold;
+  }
+  .custom-drawer .subtitle{
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+   
+   
+  }
+  .custom-drawer .subtitle img{
+    width: 10%;
+    height: 83%;
+    
+  }
+  .mittsure-container .container1 {
+    width: 87%;
+    height: 66%;
+    background-color: #4caf50;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .mittsure-container .container1 .title2 h1 {
+    color: white;
+    line-height: 4vw;
+    font-size: 3vw;
+  }
+  
+}
+/* Small (SM) - Larger Smartphones */
+@media (max-width: 768px) {
+  .search {
+    width: 88vw;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 2rem;
+  }
+}
+/* Extra Small (XS) - Smartphones */
+@media (max-width: 576px) {
+  .home-container {
+    width: 100vw;
+    height: 18vh;
+    overflow-x: hidden;
+  }
+  .search img {
+    height: 27vh;
+    width: 18vw;
+  }
+  .custom-drawer {
+    width: 220px;
+   }
+   .search-button {
+    background: #4caf50;
+    border: none;
+    border-radius: 50%;
+    padding: 11px;
+    margin-left: -35px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
+  .search img {
+    height: 25vh;
+    width: 23vw;
+  }
+  .home-container {
+    width: 100vw;
+    height: 16vh;
+    overflow-x: hidden;
+  }
+  .mittsure-container {
+    width: 100vw;
+    height: 34vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media (max-width: 480px){
+  .home-container {
+    width: 100vw;
+    height: 20vh;
+    overflow-x: hidden;
+  }
+  .search-button {
+    background: #4caf50;
+    border: none;
+    border-radius: 50%;
+    padding: 11px;
+    margin-left: -39px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
+  .mittsure-container {
+    width: 100vw;
+    height: 29vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media (max-width: 330px){
+  .search-button {
+    background: #4caf50;
+    border: none;
+    border-radius: 50%;
+    padding: 11px;
+    margin-left: -71px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
+}
