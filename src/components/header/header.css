@@ -491,6 +491,36 @@
     justify-content: center;
     align-items: center;
   }
+  .search-container {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    padding: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 62%;
+    background-color: #45a049;
+  }
+  .search {
+    width: 88vw;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 1rem;
+  }
+  .hamburger {
+    display: block;
+    margin-left: 4vw;
+  }
+  .search img {
+    height: 22vh;
+    width: 26vw;
+  }
 }
 @media (max-width: 330px){
   .search-button {

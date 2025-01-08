@@ -604,5 +604,145 @@
       flex-wrap: wrap;
       gap: 0.6vw;
     }
-
+    .featuredCategories .featured-container .card-conatiner .featured-card {
+      width: 37vw;
+      height: 20vh;
+      background-color: white;
+      z-index: 2;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 0.7vw;
+      color: rgb(8, 8, 179);
+      font-weight: 700;
+    }
+    .search-button {
+      display: none;
+    }
+    .top-categorish .card {
+      width: 38%;
+      height: 47%;
+      background-color: white;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .top-categorish {
+      width: 100vw;
+      height: 54vh;
+      background-color: #F9F9F9;
+      position: relative;
+    }
+    .featuredCategories {
+      width: 100vw;
+      height: 139vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: #efeeee;
+      margin-top: -1vw;
+    }
+    .about {
+      width: 100vw;
+      height: 42vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1vw;
+      flex-direction: column;
+    }
+    .about img {
+      width: 51%;
+      height: 52%;
+      border-radius: 5px;
+      margin-top: 9vw;
+    }
+    .about .about-container h1 {
+      font-size: 4.2vw;
+    }
+    .about .about-container p {
+      font-size: 2.5vw;
+      width: 185%;
+    }
+    .mittsure-container .container1 img {
+      width: 44%;
+      height: 84%;
+      border-radius: 0.7vw;
+    }
+    .mittsure-container .container1 .title2 h1 {
+      color: white;
+      line-height: 4vw;
+      font-size: 3.3vw;
+    }
+    .home-container {
+      width: 100vw;
+      height: 15vh;
+      overflow-x: hidden;
+    }
+    
+    .swiper {
+      width: 93vw;
+      height: auto;
+    }
+    .top-categorish .title {
+      text-align: center;
+      margin-top: 2vw;
+      font-size: 6vw;
+      margin-bottom: 1vw;
+    }
+    .top-categorish .card {
+      width: 77%;
+      height: 59%;
+      background-color: white;
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .top-categorish .card-Container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6vw;
+      height: 30vh;
+      margin-top: 2vw;
+    }
+    .top-categorish {
+      width: 100vw;
+      height: 106vh;
+      background-color: #F9F9F9;
+      position: relative;
+    }
+    .about img {
+      width: 88%;
+      height: 76%;
+      border-radius: 5px;
+      margin-top: 9vw;
+    }
+    .about .about-container h1 {
+      font-size: 5.2vw;
+    }
+    .about .about-container p {
+      font-size: 2.8vw;
+      width: 185%;
+    }
+    .swiper-slide img {
+      display: block;
+      width: 102%;
+      object-fit: fill;
+      height: 20vh;
+    }
+    .about {
+      width: 100vw;
+      height:49vh ;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1vw;
+      flex-direction: column;
+    }
   }
