@@ -1,12 +1,12 @@
 import React from 'react'
 import "./profilepage.css"
 import Header from '../../components/header/Header'
-import ProfileSide from '../../components/ProfileSide/ProfileSide'
+import Profile from '../../components/Profile/Profile'
 const Profilepage = () => {
   return (
     <div>
         <Header/>
-        <ProfileSide/>
+        <Profile/>
     </div>
   )
 }

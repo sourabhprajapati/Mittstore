@@ -11,10 +11,19 @@ import purcase from "../../assets/purchase.png";
 import company from "../../assets/company.png";
 import { Drawer, IconButton, Link } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div className="home-container">
       <div id="strip">
@@ -25,16 +34,18 @@ const Header = () => {
       <div className="search">
         <img src={logo} alt="logo" />
         <div className="search-container">
-          <input type="text" className="search-input" placeholder="Search..." />
+          <input type="text" className="search-input" placeholder="Search..."  />
           <button className="search-button">🔍</button>
         </div>
         <div className="login-btn">
           <IoPerson style={{ fontSize: "25px" }} />
-          <p>Login/SignUp</p>
+          <p>
+            <Link href="/profilepage">Login/SignUp</Link>
+          </p>
         </div>
         <div className="cart">
           <img src={cart} alt="cart" />
-          <p>Cart</p>
+          <Link href="/cart">Cart</Link>
         </div>
         <div className="hamburger">
           <IconButton
@@ -66,10 +77,9 @@ const Header = () => {
                   textDecoration: "none",
                   fontSize: "0.8rem",
                   "&:hover": {
-                   
-                    color:"#022575"
+                    color: "#022575",
                   },
-                  color:'black'
+                  color: "black",
                 }}
               >
                 Home
@@ -81,12 +91,14 @@ const Header = () => {
                 component="a"
                 href="/about"
                 marginLeft={1}
-                sx={{ textDecoration: "none", fontSize: "0.8rem",
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
                   "&:hover": {
-                   
-                    color:"#022575"
+                    color: "#022575",
                   },
-                  color:'black' }}
+                  color: "black",
+                }}
               >
                 Shop Our Product
               </Link>
@@ -97,12 +109,14 @@ const Header = () => {
                 component="a"
                 href="/about"
                 marginLeft={1}
-                sx={{ textDecoration: "none", fontSize: "0.8rem",
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
                   "&:hover": {
-                   
-                    color:"#022575"
+                    color: "#022575",
                   },
-                  color:'black' }}
+                  color: "black",
+                }}
               >
                 Shop by Learning
               </Link>
@@ -113,12 +127,14 @@ const Header = () => {
                 component="a"
                 href="/about"
                 marginLeft={1}
-                sx={{ textDecoration: "none", fontSize: "0.8rem" ,
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
                   "&:hover": {
-                   
-                    color:"#022575"
+                    color: "#022575",
                   },
-                  color:'black'}}
+                  color: "black",
+                }}
               >
                 Ideas and Resources
               </Link>
@@ -129,12 +145,14 @@ const Header = () => {
                 component="a"
                 href="/about"
                 marginLeft={1}
-                sx={{ textDecoration: "none", fontSize: "0.8rem",
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
                   "&:hover": {
-                   
-                    color:"#022575"
+                    color: "#022575",
                   },
-                  color:'black' }}
+                  color: "black",
+                }}
               >
                 Bulk Purchase
               </Link>
@@ -145,12 +163,14 @@ const Header = () => {
                 component="a"
                 href="/about"
                 marginLeft={1}
-                sx={{ textDecoration: "none", fontSize: "0.8rem",
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
                   "&:hover": {
-                   
-                    color:"#022575"
+                    color: "#022575",
                   },
-                  color:'black' }}
+                  color: "black",
+                }}
               >
                 Company
               </Link>
@@ -169,7 +189,92 @@ const Header = () => {
           <div className="menu-pic">
             <img src={product} alt="" />
             <li>
-              <a href="#home">Shop Our Product</a>
+              <Button
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                sx={{ fontWeight: "bold", color: "black" }}
+              >
+                Shop Our Product
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#013770", // Hover background color
+                      color: "white", // Optional: text color on hover
+                    },
+                  }}
+                >
+                  Furniture
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#013770", // Hover background color
+                      color: "white", // Optional: text color on hover
+                    },
+                  }}
+                >
+                  School-Office Supplies
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#013770", // Hover background color
+                      color: "white", // Optional: text color on hover
+                    },
+                  }}
+                >
+                  Art Supplies-Craft
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#013770", // Hover background color
+                      color: "white", // Optional: text color on hover
+                    },
+                  }}
+                >
+                  Outdoor-Playground
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#013770", // Hover background color
+                      color: "white", // Optional: text color on hover
+                    },
+                  }}
+                >
+                  Study tablets
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#013770", // Hover background color
+                      color: "white", // Optional: text color on hover
+                    },
+                  }}
+                >
+                  Electronics
+                </MenuItem>
+              </Menu>
             </li>
           </div>
           <div className="menu-pic">
@@ -197,9 +302,8 @@ const Header = () => {
             </li>
           </div>
         </ul>
-       
       </div>
-      <hr/>
+      <hr />
     </div>
   );
 };
