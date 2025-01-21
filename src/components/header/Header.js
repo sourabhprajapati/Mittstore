@@ -14,9 +14,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-const Header = () => {
+
+const Header = ({ setSearchTerm }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +26,7 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
   return (
     <div className="home-container">
       <div id="strip">
@@ -34,7 +37,12 @@ const Header = () => {
       <div className="search">
         <img src={logo} alt="logo" />
         <div className="search-container">
-          <input type="text" className="search-input" placeholder="Search..."  />
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search..."
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <button className="search-button">🔍</button>
         </div>
         <div className="login-btn">
@@ -175,6 +183,43 @@ const Header = () => {
                 Company
               </Link>
             </div>
+            <div className="subtitle">
+            <IoPerson style={{ fontSize: "20px" }} />
+
+              <Link
+                component="a"
+                href="/profilepage"
+                marginLeft={1}
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
+                  "&:hover": {
+                    color: "#022575",
+                  },
+                  color: "black",
+                }}
+              >
+               Login/SignUp
+              </Link>
+            </div> <div className="subtitle">
+            <img src={cart} alt="cart" />
+           
+              <Link
+                component="a"
+                href="/cart"
+                marginLeft={1}
+                sx={{
+                  textDecoration: "none",
+                  fontSize: "0.8rem",
+                  "&:hover": {
+                    color: "#022575",
+                  },
+                  color: "black",
+                }}
+              >
+                 Cart
+              </Link>
+            </div>
           </Drawer>
         </div>
       </div>
@@ -280,7 +325,7 @@ const Header = () => {
           <div className="menu-pic">
             <img src={learn} alt="" />
             <li>
-              <a href="#home">Shop by Learning Environment</a>
+            <a href="#home">Shop by Learning Environment</a>
             </li>
           </div>
           <div className="menu-pic">
@@ -301,6 +346,7 @@ const Header = () => {
               <a href="#home">Company</a>
             </li>
           </div>
+          
         </ul>
       </div>
       <hr />

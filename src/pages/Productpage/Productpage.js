@@ -5,6 +5,8 @@ import Header from '../../components/header/Header';
 import acdamic from "../../assets/Academicmaterials.jpg"
 import schoolsupplies from "../../assets/SchoolSupplies.jpg"
 import ToysGames from "../../assets/ToyGames.jpg"
+import { useNavigate } from "react-router-dom";
+
 const products = [
     {
       id: 1,
@@ -60,10 +62,14 @@ const products = [
 const Productpage = () => {
     const [cartItems, setCartItems] = useState(0);
     const [favorites, setFavorites] = useState(new Set());
-    const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+    const[searchTerm, setSearchTerm]=useState("");
+    const navigate = useNavigate();
+
+    const handleCardClick = (path) => {
+      navigate(path);
+    };
     const addToCart = () => {
       setCartItems(prev => prev + 1);
     };
@@ -89,7 +95,7 @@ const Productpage = () => {
   
     return (
       <div className="app-container">
-        <Header/>
+        <Header setSearchTerm={setSearchTerm}/>
   
         <main className="main-content">
           <div className="categories-container">
@@ -112,7 +118,7 @@ const Productpage = () => {
   
           <div className="products-grid">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
+              <div key={product.id} className="product-card" onClick={() => handleCardClick("/productdetail")} >
                 <div className="product-image-container">
                   <img 
                     src={product.image} 

@@ -521,6 +521,13 @@
     height: 22vh;
     width: 26vw;
   }
+  .search-input {
+    padding: 0.5rem 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    width: 76px;
+    transition: all 0.3s ease;
+  }
 }
 @media (max-width: 330px){
   .search-button {
