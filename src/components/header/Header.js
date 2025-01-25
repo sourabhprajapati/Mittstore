@@ -11,10 +11,12 @@ import purcase from "../../assets/purchase.png";
 import company from "../../assets/company.png";
 import { Drawer, IconButton, Link } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 
+import DropMenu from "../DropMenu/DropMenu";
+import DropMenu1 from "../DropMenu1/DropMenu1";
+import DropMenu3 from "../DropMenu3/DropMenu3";
+import DropMenu4 from "../DropMenu4/DropMenu4";
+import DropMenu5 from "../DropMenu5/DropMenu5";
 const Header = ({ setSearchTerm }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -70,156 +72,13 @@ const Header = ({ setSearchTerm }) => {
             open={isDrawerOpen}
             onClose={() => setIsDrawerOpen(false)}
             classes={{ paper: "custom-drawer" }}
+            sx={{overflow:"auto"}}
           >
             <div className="title">
               <p>Menu</p>
             </div>
             <hr />
-            <div className="subtitle">
-              <img src={home} alt="" />
-              <Link
-                component="a"
-                href="/about"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                Home
-              </Link>
-            </div>
-            <div className="subtitle">
-              <img src={product} alt="" />
-              <Link
-                component="a"
-                href="/about"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                Shop Our Product
-              </Link>
-            </div>{" "}
-            <div className="subtitle">
-              <img src={learn} alt="" />
-              <Link
-                component="a"
-                href="/about"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                Shop by Learning
-              </Link>
-            </div>{" "}
-            <div className="subtitle">
-              <img src={resouce} alt="" />
-              <Link
-                component="a"
-                href="/about"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                Ideas and Resources
-              </Link>
-            </div>{" "}
-            <div className="subtitle">
-              <img src={purcase} alt="" />
-              <Link
-                component="a"
-                href="/about"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                Bulk Purchase
-              </Link>
-            </div>
-            <div className="subtitle">
-              <img src={company} alt="" />
-              <Link
-                component="a"
-                href="/about"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                Company
-              </Link>
-            </div>
-            <div className="subtitle">
-            <IoPerson style={{ fontSize: "20px" }} />
-
-              <Link
-                component="a"
-                href="/profilepage"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-               Login/SignUp
-              </Link>
-            </div> <div className="subtitle">
-            <img src={cart} alt="cart" />
-           
-              <Link
-                component="a"
-                href="/cart"
-                marginLeft={1}
-                sx={{
-                  textDecoration: "none",
-                  fontSize: "0.8rem",
-                  "&:hover": {
-                    color: "#022575",
-                  },
-                  color: "black",
-                }}
-              >
-                 Cart
-              </Link>
-            </div>
+            
           </Drawer>
         </div>
       </div>
@@ -228,122 +87,37 @@ const Header = ({ setSearchTerm }) => {
           <div className="menu-pic">
             <img src={home} alt="" />
             <li>
-              <a href="#home">Home</a>
+            <Link href="/">Home</Link>
             </li>
           </div>
           <div className="menu-pic">
             <img src={product} alt="" />
             <li>
-              <Button
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-                sx={{ fontWeight: "bold", color: "black" }}
-              >
-                Shop Our Product
-              </Button>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#013770", // Hover background color
-                      color: "white", // Optional: text color on hover
-                    },
-                  }}
-                >
-                  Furniture
-                </MenuItem>
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#013770", // Hover background color
-                      color: "white", // Optional: text color on hover
-                    },
-                  }}
-                >
-                  School-Office Supplies
-                </MenuItem>
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#013770", // Hover background color
-                      color: "white", // Optional: text color on hover
-                    },
-                  }}
-                >
-                  Art Supplies-Craft
-                </MenuItem>
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#013770", // Hover background color
-                      color: "white", // Optional: text color on hover
-                    },
-                  }}
-                >
-                  Outdoor-Playground
-                </MenuItem>
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#013770", // Hover background color
-                      color: "white", // Optional: text color on hover
-                    },
-                  }}
-                >
-                  Study tablets
-                </MenuItem>
-                <MenuItem
-                  onClick={handleClose}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#013770", // Hover background color
-                      color: "white", // Optional: text color on hover
-                    },
-                  }}
-                >
-                  Electronics
-                </MenuItem>
-              </Menu>
+              <DropMenu1/>
             </li>
           </div>
           <div className="menu-pic">
             <img src={learn} alt="" />
             <li>
-            <a href="#home">Shop by Learning Environment</a>
+             <DropMenu/>
             </li>
           </div>
           <div className="menu-pic">
             <img src={resouce} alt="" />
             <li>
-              <a href="#home">Ideas and Resources</a>
+              <DropMenu3/>
             </li>
           </div>
           <div className="menu-pic">
             <img src={purcase} alt="" />
             <li>
-              <a href="#home">Bulk Purchase</a>
+              <DropMenu4/>
             </li>
           </div>
           <div className="menu-pic">
             <img src={company} alt="" />
             <li>
-              <a href="#home">Company</a>
+              <DropMenu5/>
             </li>
           </div>
           

@@ -2,21 +2,22 @@ import React, { useState } from 'react';
 import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import "./Cart.css"
 import Header from '../header/Header';
+import { Link } from 'react-router-dom';
 const Cart = () => {
     const [cartItems, setCartItems] = useState([
         {
           id: 1,
-          name: "Premium Wireless Headphones",
-          price: 199.99,
+          name: "Paperchase Rainbow A4 Teacher Planner",
+          price: 199,
           quantity: 1,
-          image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format"
+          image: "https://digitalcontent.api.tesco.com/v2/media/ghs/b3029b80-f789-48cb-bca2-8a34e1f0e5dc/04da3fb2-f44c-4bed-927a-db0298357569_1828511703.jpeg?h=225&w=225"
         },
         {
           id: 2,
-          name: "Smart Watch Series 5",
-          price: 299.99,
+          name: "Paperchase Terrazzo Cats Set of 6 Highlighters",
+          price: 299,
           quantity: 2,
-          image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&auto=format"
+          image: "https://digitalcontent.api.tesco.com/v2/media/ghs/656b4d08-20ec-4898-a2b4-e96d53955015/ba660615-e94b-4fee-a305-2889cd873133_1925482675.jpeg?h=225&w=225"
         }
       ]);
     
@@ -93,7 +94,7 @@ const Cart = () => {
                 <span>₹{total.toFixed(2)}</span>
               </div>
               <button className="checkout-button">
-                Proceed to Checkout
+                <Link  to="/checkout" style={{color:'white',textDecoration:'none'}}>Proceed to Checkout</Link>
               </button>
             </div>
           </div>

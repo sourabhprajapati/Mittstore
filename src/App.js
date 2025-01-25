@@ -7,6 +7,7 @@ import Home from './pages/home/Home';
 import Cart from './components/cart/Cart';
 import Productpage from './pages/Productpage/Productpage';
 import ProductDetailpage from './pages/ProductDetailpage/ProductDetailpage';
+import Checkout from './pages/Checkout/Checkout';
 function App() {
   return (
    <>
@@ -19,6 +20,7 @@ function App() {
        <Route path='/cart' element={<Cart/>}/>
        <Route path='/product' element={<Productpage/>}/>
        <Route path='/productdetail' element={<ProductDetailpage/>}/>
+       <Route path='/checkout' element={<Checkout/>}/>
      </Routes>
          
      </BrowserRouter>

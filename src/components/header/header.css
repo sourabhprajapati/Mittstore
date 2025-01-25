@@ -521,11 +521,11 @@
     height: 22vh;
     width: 26vw;
   }
-  .search-input {
+  input.search-input {
     padding: 0.5rem 2.5rem;
     border-radius: 9999px;
     border: 1px solid #e5e7eb;
-    width: 76px;
+    width: 22px;
     transition: all 0.3s ease;
   }
 }
@@ -541,5 +541,12 @@
     justify-content: center;
     align-items: center;
     transition: background 0.3s ease;
+  }
+  input.search-input {
+    padding: 0.5rem 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    width: 19px;
+    transition: all 0.3s ease;
   }
 }
