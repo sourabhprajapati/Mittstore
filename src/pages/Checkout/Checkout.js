@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CreditCard, Smartphone } from "lucide-react";
 import "./Checkout.css";
 import Header from "../../components/header/Header";
+
 const Checkout = () => {
   const [cartItems] = useState([
     {
@@ -22,15 +23,29 @@ const Checkout = () => {
     },
   ]);
 
-  const [activePayment, setActivePayment] = useState("card");
+  const [coupon, setCoupon] = useState(""); // To store coupon input
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [additionalDiscount, setAdditionalDiscount] = useState(0); // Extra discount from the coupon
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  const Discount = 20; // Percentage discount
   const shipping = 40;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const tax = subtotal * 0.1;
+  const couponDiscount = subtotal * (additionalDiscount / 100);
+  const total = subtotal + shipping + tax  - couponDiscount;
+
+  // Function to handle coupon application
+  const applyCoupon = () => {
+    if (coupon.toLowerCase() === "save10") {
+      setAdditionalDiscount(10); // 10% extra discount
+      setCouponApplied(true);
+    } else {
+      alert("Invalid coupon code");
+    }
+  };
 
   return (
     <>
@@ -61,25 +76,18 @@ const Checkout = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="city">State</label>
-              <input type="text" id="city" />
+              <label htmlFor="state">State</label>
+              <input type="text" id="state" />
             </div>
             <div className="form-group">
-              <label htmlFor="city">Pincode</label>
-              <input type="number" id="city" />
+              <label htmlFor="pincode">Pincode</label>
+              <input type="number" id="pincode" />
             </div>
 
             <div className="form-group">
-              <label htmlFor="city">Phone</label>
-              <input type="number" id="city" />
+              <label htmlFor="phone">Phone</label>
+              <input type="number" id="phone" />
             </div>
-            
-
-            
-
-            
-
-            
           </div>
 
           <div className="order-summary">
@@ -102,6 +110,25 @@ const Checkout = () => {
               </div>
             ))}
 
+            <div className="form-group">
+              <label htmlFor="coupon">Coupon</label>
+              <input
+                type="text"
+                id="coupon"
+                placeholder="Coupon..."
+                value={coupon}
+                onChange={(e) => setCoupon(e.target.value)}
+                disabled={couponApplied}
+              />
+              <button
+                onClick={applyCoupon}
+                disabled={couponApplied}
+                className={`apply-button ${couponApplied ? "disabled" : ""}`}
+              >
+                {couponApplied ? "Coupon Applied" : "Apply Coupon"}
+              </button>
+            </div>
+
             <div className="total-section">
               <div className="summary-item">
                 <span>Subtotal</span>
@@ -112,9 +139,16 @@ const Checkout = () => {
                 <span className="price">₹{shipping.toFixed(2)}</span>
               </div>
               <div className="summary-item">
-                <span>Tax</span>
+                <span>GST</span>
                 <span className="price">₹{tax.toFixed(2)}</span>
               </div>
+              
+              {couponApplied && (
+                <div className="summary-item">
+                  <span>Coupon Discount</span>
+                  <span className="price">-₹{couponDiscount.toFixed(2)}</span>
+                </div>
+              )}
               <div className="summary-item">
                 <strong>Total</strong>
                 <strong className="total-price">₹{total.toFixed(2)}</strong>

@@ -262,7 +262,20 @@
     font-weight: 700;
     color: #2c5282;
   }
-  
+  .apply-button{
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #053861ca 0%, #105392 100%);
+    color: white;
+  }
+  .apply-button:hover{
+    background-color: #124ea1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(66, 153, 225, 0.2);
+    background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  }
   @media (max-width: 768px) {
     .checkout-grid {
       grid-template-columns: 1fr;

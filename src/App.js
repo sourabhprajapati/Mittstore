@@ -8,9 +8,10 @@ import Cart from './components/cart/Cart';
 import Productpage from './pages/Productpage/Productpage';
 import ProductDetailpage from './pages/ProductDetailpage/ProductDetailpage';
 import Checkout from './pages/Checkout/Checkout';
+import { CartProvider } from './context/CartContext';
 function App() {
   return (
-   <>
+   <CartProvider>
      <BrowserRouter>
      <Routes>
        <Route path='/user/register' element={<Register />}/>
@@ -24,7 +25,7 @@ function App() {
      </Routes>
          
      </BrowserRouter>
-   </>
+   </CartProvider>
   );
 }
 

@@ -13,13 +13,13 @@
   }
   
   /* App Container */
-  .app-container {
+  .app-container1 {
     min-height: 100vh;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   }
   
   /* Navigation */
-  .nav-container {
+  .nav-container1 {
     position: sticky;
     top: 0;
     z-index: 50;
@@ -28,20 +28,20 @@
     border-bottom: 1px solid #e5e7eb;
   }
   
-  .nav-content {
+  .nav-content1 {
     max-width: 1280px;
     margin: 0 auto;
     padding: 0 1rem;
   }
   
-  .nav-wrapper {
+  .nav-wrapper1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 4rem;
   }
   
-  .logo {
+  .logo1 {
     font-size: 1.875rem;
     font-weight: bold;
     background: linear-gradient(to right, #2563eb, #4f46e5);
@@ -51,11 +51,11 @@
   }
   
   /* Search */
-  .search-container {
+  .search-container1 {
     position: relative;
   }
   
-  .search-input {
+  .search-input1 {
     padding: 0.5rem 2.5rem;
     border-radius: 9999px;
     border: 1px solid #e5e7eb;
@@ -63,13 +63,13 @@
     transition: all 0.3s ease;
   }
   
-  .search-input:focus {
+  .search-input1:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
   }
   
-  .search-icon {
+  .search-icon1 {
     position: absolute;
     left: 0.75rem;
     top: 50%;
@@ -80,12 +80,12 @@
   }
   
   /* Desktop Menu */
-  .desktop-menu {
+  .desktop-menu1 {
     display: none;
   }
   
   @media (min-width: 768px) {
-    .desktop-menu {
+    .desktop-menu1 {
       display: flex;
       align-items: center;
       gap: 2rem;
@@ -93,7 +93,7 @@
   }
   
   /* Cart */
-  .cart-button {
+  .cart-button1 {
     position: relative;
     padding: 0.5rem;
     background: none;
@@ -101,13 +101,13 @@
     cursor: pointer;
   }
   
-  .cart-icon {
+  .cart-icon1 {
     width: 1.5rem;
     height: 1.5rem;
     color: #4b5563;
   }
   
-  .cart-badge {
+  .cart-badge1 {
     position: absolute;
     top: -0.25rem;
     right: -0.25rem;
@@ -124,7 +124,7 @@
   }
   
   /* Mobile Menu */
-  .mobile-menu-button {
+  .mobile-menu-button1 {
     display: block;
     padding: 0.5rem;
     background: none;
@@ -133,39 +133,39 @@
   }
   
   @media (min-width: 768px) {
-    .mobile-menu-button {
+    .mobile-menu-button1 {
       display: none;
     }
   }
   
-  .menu-icon {
+  .menu-icon1 {
     width: 1.5rem;
     height: 1.5rem;
     color: #4b5563;
   }
   
-  .mobile-menu {
+  .mobile-menu1 {
     padding: 1rem;
     background: white;
     border-top: 1px solid #e5e7eb;
   }
   
   /* Main Content */
-  .main-content {
+  .main-content1 {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem 1rem;
   }
   
   /* Categories */
-  .categories-container {
+  .categories-container1 {
     margin-bottom: 2rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
   }
   
-  .category-pill {
+  .category-pill1 {
     padding: 0.5rem 1rem;
     border-radius: 9999px;
     font-size: 0.875rem;
@@ -177,37 +177,37 @@
     transition: all 0.3s ease;
   }
   
-  .category-pill:hover {
+  .category-pill1:hover {
     background: #f3f4f6;
     transform: translateY(-2px);
   }
   
-  .category-pill.active {
+  .category-pill1.active {
     background: #2563eb;
     color: white;
   }
   
   /* Products Grid */
-  .products-grid {
+  .products-grid1 {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
   }
   
   @media (min-width: 640px) {
-    .products-grid {
+    .products-grid1 {
       grid-template-columns: repeat(2, 1fr);
     }
   }
   
   @media (min-width: 1024px) {
-    .products-grid {
+    .products-grid1 {
       grid-template-columns: repeat(3, 1fr);
     }
   }
   
   /* Product Card */
-  .product-card {
+  .product-card1 {
     background: white;
     border-radius: 0.75rem;
     overflow: hidden;
@@ -217,28 +217,28 @@
     animation: fadeIn 0.6s ease-out;
   }
   
-  .product-card:hover {
+  .product-card1:hover {
     transform: translateY(-5px);
   }
   
-  .product-image-container {
+  .product-image-container1 {
     position: relative;
     height: 16rem;
     overflow: hidden;
   }
   
-  .product-image {
+  .product-image1 {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
   }
   
-  .product-card:hover .product-image {
+  .product-card1:hover .product-image1 {
     transform: scale(1.1);
   }
   
-  .favorite-button {
+  .favorite-button1 {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -251,28 +251,28 @@
     transition: transform 0.3s ease;
   }
   
-  .favorite-button:hover {
+  .favorite-button1:hover {
     transform: scale(1.15);
   }
   
-  .favorite-icon {
+  .favorite-icon1 {
     width: 1.25rem;
     height: 1.25rem;
     color: #4b5563;
   }
   
-  .favorite-icon.active {
+  .favorite-icon.active1 {
     color: #ef4444;
     fill: currentColor;
   }
   
-  .category-tag {
+  .category-tag1 {
     position: absolute;
     bottom: 1rem;
     left: 1rem;
   }
   
-  .category-tag span {
+  .category-tag1 span {
     padding: 0.25rem 0.75rem;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 9999px;
@@ -281,37 +281,37 @@
     color: #4b5563;
   }
   
-  .product-details {
+  .product-details1 {
     padding: 1.5rem;
   }
   
-  .product-title {
+  .product-title1 {
     font-size: 1.25rem;
     font-weight: bold;
     color: #111827;
     margin-bottom: 0.5rem;
   }
   
-  .product-description {
+  .product-description1 {
     font-size: 0.875rem;
     color: #6b7280;
     margin-bottom: 1rem;
   }
   
-  .product-footer {
+  .product-footer1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
   
-  .price-tag {
+  .price-tag1 {
     font-size: 1.5rem;
     font-weight: bold;
     color: #111827;
     position: relative;
   }
   
-  .price-tag::before {
+  .price-tag1::before {
     content: '';
     position: absolute;
     width: 110%;
@@ -322,7 +322,7 @@
     z-index: 0;
   }
   
-  .add-to-cart-button {
+  .add-to-cart-button1 {
     background: #2563eb;
     color: white;
     padding: 0.75rem 1.5rem;
@@ -335,12 +335,12 @@
     overflow: hidden;
   }
   
-  .add-to-cart-button:hover {
+  .add-to-cart-button1:hover {
     background: #1d4ed8;
     transform: translateY(-2px);
   }
   
-  .add-to-cart-button::after {
+  .add-to-cart-button1::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -356,7 +356,7 @@
     transition: all 0.5s ease;
   }
   
-  .add-to-cart-button:hover::after {
+  .add-to-cart-button:hover1::after {
     left: 100%;
   }
   
