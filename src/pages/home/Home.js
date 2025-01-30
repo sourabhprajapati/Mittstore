@@ -42,6 +42,9 @@ import { Autoplay } from "swiper/modules";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import Footer from "../../components/Footer/Footer";
+import TopTranding from "../../components/TopTranding/TopTranding";
+import HotDeal from "../../components/HotDeal/HotDeal";
+import Clients from "../../components/Clients/Clients";
 function Home() {
   return (
     <div>
@@ -83,26 +86,8 @@ function Home() {
           <img src={slide3} alt="" />
         </SwiperSlide>
       </Swiper>
-      <div className="top-categorish">
-        <h1 className="title">Top Categories</h1>
-        <div className="card-Container">
-          <div className="card">
-            <img src={tabs} alt="" />
-          </div>
-          <div className="card">
-            <img src={elct} alt="" />
-          </div>
-          <div className="card">
-            <img src={outdoor} alt="" />
-          </div>
-          <div className="card">
-            <img src={current} alt="" />
-          </div>
-          <div className="card">
-            <img src={fur} alt="" />
-          </div>
-        </div>
-      </div>
+       <TopTranding/>
+       <HotDeal/>
       <div className="mittsure-container">
         <div className="container1">
           <img src={poster} alt="" />
@@ -207,6 +192,7 @@ function Home() {
               <p>Call or email us 24/7</p>
            </div>
       </div>
+      <Clients/>
       <Footer/>
     </div>
   );

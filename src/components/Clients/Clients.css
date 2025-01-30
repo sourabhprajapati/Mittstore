@@ -1,0 +1,23 @@
+.clientContainer{
+    width: 100vw;
+    height: 40vh;
+}
+.clientContainer h1{
+    text-align: center;
+    margin: 1rem 0;
+    font-size: 2rem;
+}
+.custom-swiper{
+    width: 90%;
+    height: 50%;
+}
+.client-slide {
+    width: 50%;
+    height: 80%;
+}
+.client-slide img{
+    object-fit: contain;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}

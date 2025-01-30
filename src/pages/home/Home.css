@@ -24,56 +24,7 @@
     object-fit: cover;
     height: auto;
   }
-  .top-categorish{
-    width: 100vw;
-    height: 40vh;
-   
-    background-color: #F9F9F9;
-    position: relative;
-  }
-  .top-categorish .title{
-    text-align: center;
-    margin-top: 2vw;
-    font-size: 2vw;
-    
-  }
-  .top-categorish .card-Container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 2vw;
-    height: 30vh;
-    margin-top: 2vw;
-  }
   
-  .top-categorish .card{
-    width: 12%;
-    height: 70%;
-    background-color: white;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-  .top-categorish .card-Container .card img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-    overflow: hidden ;
-    transition: transform 0.3s ease;
-
-
-  }
-  .top-categorish .card-Container .card:hover{
-    
-    transform: translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  .card:hover img {
-    transform: scale(1.1);
-  }
   .featuredCategories{
     width: 100vw;
     height: 70vh;
