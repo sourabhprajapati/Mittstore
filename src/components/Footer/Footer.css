@@ -30,7 +30,7 @@
 .footerSection1 p,
 .footerSection2 p,
 .footerSection4 p {
-  font-weight: 600;
+  font-weight: 400;
   margin: 0.4rem 0;
   cursor: pointer;
 }

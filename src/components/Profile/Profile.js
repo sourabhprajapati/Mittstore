@@ -4,7 +4,7 @@ import "./Profile.css"
 import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
 import men from "../../assets/men.jpg"
 import supple from "../../assets/supplies.jpg"
-
+import {Link} from "react-router-dom"
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('wishlist');
 
@@ -28,7 +28,7 @@ const Profile = () => {
                       <Star key={i} size={16} className={i < 4 ? 'filled' : ''} />
                     ))}
                   </div>
-                  <button className="btn-primary">Add to Cart</button>
+                  <Link to='/cart'><button className="btn-primary">Add to Cart</button></Link>
                 </div>
               ))}
             </div>

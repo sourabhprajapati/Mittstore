@@ -49,7 +49,7 @@
   }
   .swiper {
     width: 90%;
-    height: 70%;
+    height: 80%;
     margin-top: 3rem;
   }
   
@@ -100,6 +100,7 @@
     background: linear-gradient(135deg, #053861ca 0%, #105392 100%);
     color: #F7F7F7;
     font-weight: 700;
+    cursor: pointer;
   }
   .swiper-slide button:hover{
     background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);

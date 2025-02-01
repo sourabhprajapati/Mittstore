@@ -46,10 +46,10 @@ const Clients = () => {
             <img src="https://mittshop.mittsure.com/vendors/logo/tinkerly%20logo.jpeg" alt="" srcset="" />
         </SwiperSlide>
         <SwiperSlide  className="client-slide">
-            <img src="https://mittshop.mittsure.com/vendors/logo/vendor-1798228958.png" alt="" srcset="" />
+            <img src="https://www.schoolathome.mittsure.com/front_assets/images/sathome.png" alt="" srcset="" />
         </SwiperSlide>
         <SwiperSlide  className="client-slide">
-            <img src="https://mittshop.mittsure.com/vendors/logo/vendor-165955242.png" alt="" srcset="" />
+            <img src="https://mittlearn.qdegrees.com/frontend/images/mittlearn-logo.png" alt="" srcset="" />
         </SwiperSlide>
         <SwiperSlide  className="client-slide">
             <img src="https://mittshop.mittsure.com/vendors/logo/mittsure.png" alt="" srcset="" />
