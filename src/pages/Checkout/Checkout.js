@@ -1,49 +1,105 @@
-import React, { useState } from "react";
-import { CreditCard, Smartphone } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import "./Checkout.css";
 import Header from "../../components/header/Header";
+import axios from "axios";
 
 const Checkout = () => {
-  const [cartItems] = useState([
-    {
-      id: 1,
-      name: "Paperchase Rainbow A4 Teacher Planner",
-      price: 199,
-      quantity: 1,
-      image:
-        "https://digitalcontent.api.tesco.com/v2/media/ghs/b3029b80-f789-48cb-bca2-8a34e1f0e5dc/04da3fb2-f44c-4bed-927a-db0298357569_1828511703.jpeg?h=225&w=225",
-    },
-    {
-      id: 2,
-      name: "Paperchase Terrazzo Cats Set of 6 Highlighters",
-      price: 299,
-      quantity: 1,
-      image:
-        "https://digitalcontent.api.tesco.com/v2/media/ghs/656b4d08-20ec-4898-a2b4-e96d53955015/ba660615-e94b-4fee-a305-2889cd873133_1925482675.jpeg?h=225&w=225",
-    },
-  ]);
-
-  const [coupon, setCoupon] = useState(""); // To store coupon input
+  const [cartItems, setCartItems] = useState([]);
+  const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
-  const [additionalDiscount, setAdditionalDiscount] = useState(0); // Extra discount from the coupon
+  const [additionalDiscount, setAdditionalDiscount] = useState(0);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+    phone: "",
+  });
+  const [errors, setErrors] = useState({});
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const Discount = 20; // Percentage discount
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/cart")
+      .then((response) => {
+        const processedItems = response.data.map(item => ({
+          ...item,
+          price: Number(item.price)
+        }));
+        setCartItems(processedItems);
+      })
+      .catch((error) => console.error("Error fetching cart items:", error));
+  }, []);
+
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = 40;
   const tax = subtotal * 0.1;
   const couponDiscount = subtotal * (additionalDiscount / 100);
-  const total = subtotal + shipping + tax  - couponDiscount;
+  const total = subtotal + shipping + tax - couponDiscount;
 
-  // Function to handle coupon application
-  const applyCoupon = () => {
-    if (coupon.toLowerCase() === "save10") {
-      setAdditionalDiscount(10); // 10% extra discount
+  const applyCoupon = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/validate-coupon", { code: coupon });
+      setAdditionalDiscount(response.data.discount_percentage);
       setCouponApplied(true);
-    } else {
-      alert("Invalid coupon code");
+    } catch (error) {
+      console.error("Coupon validation error:", error.response?.data);
+      alert(error.response?.data?.error || "Failed to validate coupon");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+    // Clear the error for the field when it changes
+    setErrors({ ...errors, [id]: "" });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email address is invalid";
+    }
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.state.trim()) newErrors.state = "State is required";
+    if (!formData.pincode.trim()) newErrors.pincode = "Pincode is required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    else if (!/^\d{10}$/.test(formData.phone)) newErrors.phone = "Phone number must be 10 digits";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCheckout = async () => {
+    if (!validateForm()) return;
+
+    const orderData = {
+      fullName: formData.name,
+      email: formData.email,
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+      phone: formData.phone,
+      total,
+      couponCode: couponApplied ? coupon : null,
+    };
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/orders", orderData);
+      alert(response.data.message);
+      setFormData({ name: "", email: "", address: "", city: "", state: "", pincode: "", phone: "" });
+      setCoupon("");
+      setCouponApplied(false);
+      setAdditionalDiscount(0);
+    } catch (error) {
+      console.error("Error processing checkout:", error);
+      alert("Failed to process order");
     }
   };
 
@@ -54,53 +110,30 @@ const Checkout = () => {
         <div className="checkout-grid">
           <div className="checkout-form">
             <h2 className="section-title">Shipping Information</h2>
-
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <input type="text" id="name" placeholder="Name..." />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <input type="email" id="email" placeholder="email..." />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="address">Shipping Address</label>
-              <input type="text" id="address" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="city">City</label>
-              <input type="text" id="city" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="state">State</label>
-              <input type="text" id="state" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="pincode">Pincode</label>
-              <input type="number" id="pincode" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="phone">Phone</label>
-              <input type="number" id="phone" />
-            </div>
+            {Object.entries(formData).map(([key, value]) => (
+              <div className="form-group" key={key}>
+                <label htmlFor={key}>
+                  {key.replace(/([A-Z])/g, " $1").toUpperCase()}
+                </label>
+                <input
+                  type={key === "email" ? "email" : key === "phone" || key === "pincode" ? "number" : "text"}
+                  id={key}
+                  value={value}
+                  onChange={handleInputChange}
+                  placeholder={`${key}...`}
+                  required
+                />
+                {errors[key] && <span className="error-message">{errors[key]}</span>}
+              </div>
+            ))}
           </div>
 
           <div className="order-summary">
             <h2 className="section-title">Order Summary</h2>
-
             {cartItems.map((item) => (
               <div key={item.id} className="summary-item">
                 <div className="product-details">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="product-image"
-                  />
+                  <img src={item.image} alt={item.name} className="product-image" />
                   <div>
                     <h3>{item.name}</h3>
                     <p>Quantity: {item.quantity}</p>
@@ -142,7 +175,6 @@ const Checkout = () => {
                 <span>GST</span>
                 <span className="price">₹{tax.toFixed(2)}</span>
               </div>
-              
               {couponApplied && (
                 <div className="summary-item">
                   <span>Coupon Discount</span>
@@ -155,7 +187,9 @@ const Checkout = () => {
               </div>
             </div>
 
-            <button className="checkout-button">Complete Purchase</button>
+            <button className="checkout-button" onClick={handleCheckout}>
+              Complete Purchase
+            </button>
           </div>
         </div>
       </div>

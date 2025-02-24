@@ -79,7 +79,7 @@ const Profile = () => {
             </div>
           </div>
         );
-      case 'redeemPoints':
+      // case 'redeemPoints':
         return (
           <div className="content-area">
             <h2><Gift className="icon" /> Redeem Points</h2>
@@ -213,13 +213,13 @@ const Profile = () => {
             <Ticket size={24} />
             <span>Coupons</span>
           </button>
-          <button
+          {/* <button
             className={`nav-button ${activeTab === 'redeemPoints' ? 'active' : ''}`}
             onClick={() => setActiveTab('redeemPoints')}
           >
             <Gift size={24} />
             <span>Redeem Points</span>
-          </button>
+          </button> */}
           <button
             className={`nav-button ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}

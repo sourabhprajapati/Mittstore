@@ -1,0 +1,140 @@
+.about-us1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    font-family: "Arial", sans-serif;
+    height: 100vh; /* Full screen height */
+    position: relative;
+    color: black;
+    overflow: hidden; /* Ensures blobs don’t overflow */
+    background: linear-gradient(to right, #e0e7ff, #f5f7ff); /* Light gradient */
+}
+
+/* Outer Blob Shape (Lighter Shade) */
+.about-us1::after {
+    content: "";
+    position: absolute;
+    top: -150px;
+    left: -100px;
+    width: 750px; /* Bigger blob */
+    height: 750px;
+    background: rgba(180, 200, 255, 0.5); /* Lightest Blue */
+    border-radius: 50%;
+    filter: blur(120px); /* More blur for a soft look */
+    z-index: 0;
+}
+
+/* Inner Blob Shape (Darker Shade) */
+.about-us1::before {
+    content: "";
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    width: 400px; /* Smaller inner blob */
+    height: 400px;
+    background: rgba(100, 140, 255, 0.4); /* Slightly darker blue */
+    border-radius: 50%;
+    filter: blur(90px);
+    z-index: 1;
+}
+
+/* Content Alignment */
+.about-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    position: relative;
+    z-index: 2;
+    max-width: 80%;
+}
+
+/* About Content */
+.about-content1 {
+    width: 50%;
+    max-width: 500px;
+    text-align: left; /* Align text left */
+    margin-left: -50px; /* Shift text a little to the left */
+    margin-right: 180px;
+}
+
+.about-content1 h2 {
+    font-size: 3.4rem;
+    font-weight: 800;
+    color: black; 
+}
+
+.about-content1 h3 {
+    font-size: 1.8rem;
+    color: black; 
+    margin-bottom: 20px;
+}
+
+.about-content1 p {
+    font-size: 1rem;
+    color: black;
+    line-height: 1.6;
+}
+
+/* Image Gallery */
+.image-gallery1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -30px; /* Shift image slightly to the right */
+}
+
+.image-container1 {
+    display: flex;
+    gap: 10px;
+}
+
+.image-section {
+    width: 150px;
+    height: 450px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-image: url("../../assets/about.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+/* Position each section to look like they are part of a single image */
+.left {
+    background-position: left;
+    width: 190px;
+    height: 450px;
+}
+
+.middle {
+    width: 205px;
+    height: 350px;
+    background-position: center;
+}
+
+.right {
+    background-position: right;
+    width: 200px;
+    height: 450px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-content1 {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+    }
+
+    .image-gallery1 {
+        width: 100%;
+        justify-content: center;
+        margin-right: 0;
+    }
+}

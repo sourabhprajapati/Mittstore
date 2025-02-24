@@ -1,0 +1,147 @@
+/* Responsive layout */
+.container-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-image: url('../../assets/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  /* Container and login box */
+  .container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+  }
+  
+  .login-box {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Input and form elements */
+  .input-group {
+    margin-bottom: 15px;
+    padding: 0 15px;
+  }
+  
+  label {
+    font-size: 14px;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  input:focus {
+    border-color: #5d9cec;
+  }
+  
+  /* Captcha */
+  .captcha-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 15px;
+  }
+  
+  .captcha {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 10px;
+    background: #efefef;
+    padding: 5px 10px;
+    border-radius: 5px;
+    user-select: none;
+  }
+  
+  .captcha-input {
+    flex: 1;
+  }
+  
+  .login-btn-login1  {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    background: linear-gradient(135deg, #5d9cec, #9461f5);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-btn-login1 :hover {
+    opacity: 0.9;
+  }
+  
+  /* Links */
+  .links {
+    margin-top: 15px;
+    padding: 0 15px;
+  }
+  
+  .forgot-password, .signup-link {
+    font-size: 14px;
+    color: #5d9cec;
+    text-decoration: none;
+  }
+  
+  .signup-link:hover, .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media screen and (max-width: 768px) {
+    .container {
+      max-width: 90%;
+    }
+  
+    .login-box {
+      padding: 20px;
+    }
+  
+    h2 {
+      font-size: 20px;
+    }
+  
+    .captcha {
+      font-size: 16px;
+    }
+  
+    input, .login-btn {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .captcha-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .captcha {
+      margin-bottom: 10px;
+    }
+  }

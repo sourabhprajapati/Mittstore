@@ -33,6 +33,11 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(10px);
   }
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
   
   .form-group {
     margin-bottom: 1.8rem;
