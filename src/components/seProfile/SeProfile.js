@@ -1,16 +1,22 @@
-import React from 'react'
-import { useState } from 'react';
-import "./SchoolProfile.css"
+import React, { useState, useEffect } from 'react';
+import "./SeProfile.css"
 import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
 import men from "../../assets/men.jpg"
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
 import { BiSolidSchool } from "react-icons/bi";
-const SchoolProfile = () => {
-  const [activeTab, setActiveTab] = useState('wishlist');
+const SeProfile = () => {
+  const [activeTab, setActiveTab] = useState('Total School');
+  const [user, setUser] = useState({
+    full_name: '',
+    email: '',
+    role: '',
+    
+  });
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'addressBook':
       case 'wishlist':
         return (
           <div className="content-area">
@@ -35,7 +41,7 @@ const SchoolProfile = () => {
             </div>
           </div>
         );
-      case 'addressBook':
+    
         return (
           <div className="content-area">
             <h2><MapPin className="icon" /> Address Book</h2>
@@ -174,7 +180,7 @@ const SchoolProfile = () => {
             <button className="btn-primary">Save Preferences</button>
           </div>
         );
-        case 'total School':
+        case 'Total School':
   return (
     <div className="content-area">
       <h2><BiSolidSchool className="icon" /> Total School</h2>
@@ -206,34 +212,64 @@ const SchoolProfile = () => {
         return <div className="content-area">Select a tab to view content.</div>;
     }
   };
+   useEffect(() => {
+      // Simulating fetching user data from your backend (replace this with actual API call)
+      const fetchUserData = async () => {
+        // Replace with your API call, e.g., fetch('/api/user')
+        const response = await fetch('http://localhost:5000/api/users');
+        const data = await response.json();
+        console.log(data)
+        // Assuming the backend returns an object like { name: 'Sourabh', email: 'sourabhprajapati920@gmail.com' }
+        const loggedInUser = data.find(user => user.role === 'se'); // Change 'student' to the desired role
+       
+      
+          setUser({
+            full_name: loggedInUser.full_name,
+            email: loggedInUser.email,
+            role: loggedInUser.role,
+          });
+  
+      };
+  
+      fetchUserData();
+    }, []);
 
   return (
     <div className="profile-container">
       <header className="profile-header">
-        <h1>My Profile</h1>
+        {/* <h1>My Profile</h1>
         <div className="user-info">
           <img src={men} alt="User Avatar" className="avatar" />
           <div className="user-details">
             <span className="user-name">Sourabh</span>
             <span className="user-status">sourabhprajapati920@gmail.com</span>
           </div>
+        </div> */}
+        {user.role === 'se' && (
+        <div className="user-info">
+          <h1>SE Dashboard</h1>
+          <div className="user-details">
+          <span className="user-name">{user.full_name}</span>
+          {/* <span className="user-status">{user.email}</span> */}
         </div>
+        </div>
+      )}
       </header>
       <div className="profile-content">
         <nav className="sidebar">
-          <button
-            className={`nav-button ${activeTab === 'wishlist' ? 'active' : ''}`}
-            onClick={() => setActiveTab('wishlist')}
+        <button
+            className={`nav-button ${activeTab === 'Total School' ? 'active' : ''}`}
+            onClick={() => setActiveTab('Total School')}
           >
-            <Heart size={24} />
-            <span>Wishlist</span>
+            <BiSolidSchool size={24} />
+            <span>Total School</span>
           </button>
           <button
-            className={`nav-button ${activeTab === 'addressBook' ? 'active' : ''}`}
-            onClick={() => setActiveTab('addressBook')}
+            className={`nav-button ${activeTab === 'Genrate coupons' ? 'active' : ''}`}
+            onClick={() => setActiveTab('Genrate coupons')}
           >
-            <MapPin size={24} />
-            <span>Address Book</span>
+            <BiSolidSchool size={24} />
+            <span>Genrate coupons</span>
           </button>
           <button
             className={`nav-button ${activeTab === 'coupons' ? 'active' : ''}`}
@@ -249,6 +285,23 @@ const SchoolProfile = () => {
             <Gift size={24} />
             <span>Redeem Points</span>
           </button>
+          
+          <button
+            className={`nav-button ${activeTab === 'wishlist' ? 'active' : ''}`}
+            onClick={() => setActiveTab('wishlist')}
+          >
+            <Heart size={24} />
+            <span>Wishlist</span>
+          </button>
+          {/* <button
+            className={`nav-button ${activeTab === 'addressBook' ? 'active' : ''}`}
+            onClick={() => setActiveTab('addressBook')}
+          >
+            <MapPin size={24} />
+            <span>Address Book</span>
+          </button> */}
+          
+          
           <button
             className={`nav-button ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
@@ -263,13 +316,7 @@ const SchoolProfile = () => {
             <Bell size={24} />
             <span>Manage Notifications</span>
           </button>
-          <button
-            className={`nav-button ${activeTab === 'total School' ? 'active' : ''}`}
-            onClick={() => setActiveTab('total School')}
-          >
-            <BiSolidSchool size={24} />
-            <span>total School</span>
-          </button>
+         
         </nav>
         <main className="main-content">
           {renderContent()}
@@ -278,4 +325,4 @@ const SchoolProfile = () => {
     </div>)
 }
 
-export default SchoolProfile
+export default SeProfile

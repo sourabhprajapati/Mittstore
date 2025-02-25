@@ -4,9 +4,7 @@ import SignupForm from './components/auth/Register';
 import Login from './components/auth/Login';
 import ForgetPassword from './components/auth/ForgetPassword';
 import Profilepage from './pages/profile/Profilepage';
-import Profile from './components/Profile/Profile';
-import SeProfile from './components/SchoolProfile/SeProfile';
-import SchoolProfile from './components/seProfile/SchoolProfile';
+import SchoolProfile from './components/SchoolProfile/SchoolProfile';
 import Home from './pages/home/Home';
 import Cart from './components/cart/Cart';
 import Productpage from './pages/Productpage/Productpage';
@@ -18,6 +16,9 @@ import Form from './components/Form/Form';
 import Leader from './components/Leaders/Leader';
 import Testimonials from './components/Testimonials/Testimonials';
 import About from './components/About/About';
+import StudentProfile from './components/StudentProfile/StudentProfile';
+import SeProfile from './components/seProfile/SeProfile';
+
 
 function App() {
   return (
@@ -31,9 +32,9 @@ function App() {
        <Route path='/forgetpass' element={<ForgetPassword/>}/>
        <Route path='/' element={<Home />}/>
        <Route path='/profilepage' element={<Profilepage/>}/>
-       <Route path="/student-profile" element={<Profile/>}/>
-       <Route path="/school-profile" element={<SeProfile/>}/>
-       <Route path="/se-profile" element={<SchoolProfile/>}/>
+       <Route path="/student-profile" element={<StudentProfile/>}/>
+       <Route path="/school-profile" element={<SchoolProfile/>}/>
+       <Route path="/se-profile" element={<SeProfile/>}/>
        <Route path='/cart' element={<Cart/>}/>
        <Route path='/product' element={<Productpage/>}/>
        <Route path='/productdetail' element={<ProductDetailpage/>}/>

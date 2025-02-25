@@ -29,6 +29,7 @@ import DropMenu1 from "../DropMenu1/DropMenu1";
 import DropMenu3 from "../DropMenu3/DropMenu3";
 import DropMenu4 from "../DropMenu4/DropMenu4";
 import DropMenu5 from "../DropMenu5/DropMenu5";
+import DropMenu6 from "../DropMenu6/DropMenu6";
 const Header = ({ setSearchTerm }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
@@ -288,19 +289,12 @@ const Header = ({ setSearchTerm }) => {
         </div> */}
 
         {user ? (
-          <div className="user-info">
-            <span>Welcome, {user.firstName}!</span>
-            <button onClick={() => {
-              localStorage.removeItem('user'); // Remove user from storage
-              setUser(null); // Reset state
-            }}>
-              Logout
-            </button>
+          <div className="user-info1">
+            <DropMenu6 user={user} setUser={setUser} />
           </div>
         ) : (
           <Link href="/user/login">Login/SignUp</Link>
         )}
-
         <div className="cart">
 
           <div className="cart-icon-container">

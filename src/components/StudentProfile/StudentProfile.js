@@ -1,12 +1,17 @@
 import React from 'react'
-import { useState } from 'react';
-import "./Profile.css"
+import { useState ,useEffect} from 'react';
+import "./StudentProfile.css"
 import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
 import men from "../../assets/men.jpg"
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
-const Profile = () => {
+const StudentProfile = () => {
   const [activeTab, setActiveTab] = useState('wishlist');
+  const [user, setUser] = useState({
+    full_name: '',
+    email: '',
+    role: '',
+  });
 
   const renderContent = () => {
     switch (activeTab) {
@@ -177,19 +182,52 @@ const Profile = () => {
         return <div className="content-area">Select a tab to view content.</div>;
     }
   };
+  useEffect(() => {
+    // Simulating fetching user data from your backend (replace this with actual API call)
+    const fetchUserData = async () => {
+      // Replace with your API call, e.g., fetch('/api/user')
+      const response = await fetch('http://localhost:5000/api/users');
+      const data = await response.json();
+      console.log(data)
+      // Assuming the backend returns an object like { name: 'Sourabh', email: 'sourabhprajapati920@gmail.com' }
+      const loggedInUser = data.find(user => user.role === 'student'); // Change 'student' to the desired role
+     
+    
+        setUser({
+          full_name: loggedInUser.full_name,
+          email: loggedInUser.email,
+          role: loggedInUser.role,
+        });
+        console.log(user)
+
+    };
+
+    fetchUserData();
+  }, []); // Empty dependency array means this effect runs only once, like componentDidMount
+
 
   return (
     <div className="profile-container">
       <header className="profile-header">
-        <h1>My Profile</h1>
-        <div className="user-info">
-          <img src={men} alt="User Avatar" className="avatar" />
-          <div className="user-details">
-            <span className="user-name">Sourabh</span>
-            <span className="user-status">sourabhprajapati920@gmail.com</span>
-          </div>
+      {/* <h1>My Profile</h1>
+      <div className="user-info">
+        <img src={user.avatar} alt="User Avatar" className="avatar" />
+        <div className="user-details">
+          <span className="user-name">{user.name}</span>
+          <span className="user-status">{user.email}</span>
         </div>
-      </header>
+      </div> */}
+     {user.role === 'student' && (
+        <div className="user-info">
+          <h1>Student Dashboard</h1>
+          <div className="user-details">
+          <span className="user-name">{user.full_name}</span>
+          {/* <span className="user-status">{user.email}</span> */}
+        </div>
+        </div>
+      )}
+
+    </header>
       <div className="profile-content">
         <nav className="sidebar">
           <button
@@ -199,6 +237,14 @@ const Profile = () => {
             <Heart size={24} />
             <span>Wishlist</span>
           </button>
+          <button
+            className={`nav-button ${activeTab === 'My order' ? 'active' : ''}`}
+            onClick={() => setActiveTab('My order')}
+          >
+            <Heart size={24} />
+            <span>My order</span>
+          </button>
+          
           <button
             className={`nav-button ${activeTab === 'addressBook' ? 'active' : ''}`}
             onClick={() => setActiveTab('addressBook')}
@@ -242,4 +288,4 @@ const Profile = () => {
     </div>)
 }
 
-export default Profile
+export default StudentProfile

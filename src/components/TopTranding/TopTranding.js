@@ -13,7 +13,7 @@ import { Pagination, Navigation } from "swiper/modules";
 const TopTranding = () => {
   return (
     <div className="top-categorish">
-      <h1 className="title">Top Tranding</h1>
+      <h1 className="title">Top Trending</h1>
       <Swiper
         slidesPerView={1}
         spaceBetween={10}
