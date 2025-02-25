@@ -62,13 +62,25 @@ function Login() {
 
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(data.user)); // Store user data
-        navigate('/'); // Redirect to home page
+        switch (data.user.role) {
+          case 'student':
+            navigate('/student-profile');
+            break;
+          case 'se':
+            navigate('/se-profile');
+            break;
+          case 'school':
+            navigate('/school-profile');
+            break;
+          default:
+            setError('Unknown user type.');
+        }
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
         setCaptcha(generateCaptcha());
         setCaptchaInput('');
       }
-    } catch (error) {
+    } catch (err) {
       setError('Server error. Please try again later.');
       setCaptcha(generateCaptcha());
       setCaptchaInput('');

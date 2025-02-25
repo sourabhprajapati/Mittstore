@@ -4,6 +4,9 @@ import SignupForm from './components/auth/Register';
 import Login from './components/auth/Login';
 import ForgetPassword from './components/auth/ForgetPassword';
 import Profilepage from './pages/profile/Profilepage';
+import Profile from './components/Profile/Profile';
+import SeProfile from './components/SchoolProfile/SeProfile';
+import SchoolProfile from './components/seProfile/SchoolProfile';
 import Home from './pages/home/Home';
 import Cart from './components/cart/Cart';
 import Productpage from './pages/Productpage/Productpage';
@@ -28,6 +31,9 @@ function App() {
        <Route path='/forgetpass' element={<ForgetPassword/>}/>
        <Route path='/' element={<Home />}/>
        <Route path='/profilepage' element={<Profilepage/>}/>
+       <Route path="/student-profile" element={<Profile/>}/>
+       <Route path="/school-profile" element={<SeProfile/>}/>
+       <Route path="/se-profile" element={<SchoolProfile/>}/>
        <Route path='/cart' element={<Cart/>}/>
        <Route path='/product' element={<Productpage/>}/>
        <Route path='/productdetail' element={<ProductDetailpage/>}/>
