@@ -1,11 +1,12 @@
 import React from 'react'
 import { useState } from 'react';
-import "./SchoolProfile.css"
+import "./SeProfile.css"
 import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
 import men from "../../assets/men.jpg"
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
 import { BiSolidSchool } from "react-icons/bi";
+import { FaChildReaching } from "react-icons/fa6";
 const SchoolProfile = () => {
   const [activeTab, setActiveTab] = useState('wishlist');
 
@@ -174,27 +175,27 @@ const SchoolProfile = () => {
             <button className="btn-primary">Save Preferences</button>
           </div>
         );
-        case 'total School':
+        case 'total Student':
   return (
     <div className="content-area">
-      <h2><BiSolidSchool className="icon" /> Total School</h2>
-      <div className="school-table">
+      <h2><FaChildReaching className="icon" /> Total Student</h2>
+      <div className="Student-table">
         <div className="table-header">
-          <span className="table-column">School Name</span>
+          <span className="table-column">Student Name</span>
           <span className="table-column">Purchase Amount</span>
-          <span className="table-column">Incentive</span>
+          <span className="table-column">reward</span>
         </div>
         {[
-          { school: "St. Xavier's School", purchaseAmount: "₹50,000", incentive: "₹2,500" },
-          { school: "DPS Jaipur", purchaseAmount: "₹70,000", incentive: "₹3,500" },
-          { school: "Ryan International", purchaseAmount: "₹60,000", incentive: "₹3,000" },
-          { school: "Tagore Public School", purchaseAmount: "₹80,000", incentive: "₹4,000" },
+          { Student: "mohit", purchaseAmount: "₹50,000", reward: "₹2,500" },
+          { Student: "prerna", purchaseAmount: "₹70,000", reward: "₹3,500" },
+          { Student: "lakshita", purchaseAmount: "₹60,000", reward: "₹3,000" },
+          { Student: "sourabh", purchaseAmount: "₹80,000", reward: "₹4,000" },
           
         ].map((data, index) => (
           <div key={index} className="table-row">
-            <span className="table-column">{data.school}</span>
+            <span className="table-column">{data.Student}</span>
             <span className="table-column">{data.purchaseAmount}</span>
-            <span className="table-column">{data.incentive}</span>
+            <span className="table-column">{data.reward}</span>
           </div>
         ))}
       </div>
@@ -264,11 +265,11 @@ const SchoolProfile = () => {
             <span>Manage Notifications</span>
           </button>
           <button
-            className={`nav-button ${activeTab === 'total School' ? 'active' : ''}`}
-            onClick={() => setActiveTab('total School')}
+            className={`nav-button ${activeTab === 'total Student' ? 'active' : ''}`}
+            onClick={() => setActiveTab('total Student')}
           >
-            <BiSolidSchool size={24} />
-            <span>total School</span>
+            <FaChildReaching size={24} />
+            <span>total Student</span>
           </button>
         </nav>
         <main className="main-content">
