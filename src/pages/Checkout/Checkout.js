@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Checkout.css";
 import Header from "../../components/header/Header";
+import { useCart } from "../../components/context/CartContext";
 import axios from "axios";
 
 const Checkout = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems } = useCart(); // Fetch cart items from context
   const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [additionalDiscount, setAdditionalDiscount] = useState(0);
@@ -19,23 +20,11 @@ const Checkout = () => {
   });
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/cart")
-      .then((response) => {
-        const processedItems = response.data.map(item => ({
-          ...item,
-          price: Number(item.price)
-        }));
-        setCartItems(processedItems);
-      })
-      .catch((error) => console.error("Error fetching cart items:", error));
-  }, []);
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = 40;
-  const tax = subtotal * 0.1;
-  const couponDiscount = subtotal * (additionalDiscount / 100);
+  // Calculate totals
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 0), 0);
+  const shipping = cartItems.length > 0 ? 40 : 0; // Apply shipping only if cart is not empty
+  const tax = subtotal * 0.1; // 10% GST
+  const couponDiscount = (subtotal * additionalDiscount) / 100;
   const total = subtotal + shipping + tax - couponDiscount;
 
   const applyCoupon = async () => {
@@ -44,7 +33,6 @@ const Checkout = () => {
       setAdditionalDiscount(response.data.discount_percentage);
       setCouponApplied(true);
     } catch (error) {
-      console.error("Coupon validation error:", error.response?.data);
       alert(error.response?.data?.error || "Failed to validate coupon");
     }
   };
@@ -52,7 +40,6 @@ const Checkout = () => {
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
-    // Clear the error for the field when it changes
     setErrors({ ...errors, [id]: "" });
   };
 
@@ -62,14 +49,17 @@ const Checkout = () => {
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email address is invalid";
+      newErrors.email = "Invalid email format";
     }
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
     if (!formData.pincode.trim()) newErrors.pincode = "Pincode is required";
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-    else if (!/^\d{10}$/.test(formData.phone)) newErrors.phone = "Phone number must be 10 digits";
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = "Phone number must be 10 digits";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -98,7 +88,6 @@ const Checkout = () => {
       setCouponApplied(false);
       setAdditionalDiscount(0);
     } catch (error) {
-      console.error("Error processing checkout:", error);
       alert("Failed to process order");
     }
   };
@@ -112,9 +101,7 @@ const Checkout = () => {
             <h2 className="section-title">Shipping Information</h2>
             {Object.entries(formData).map(([key, value]) => (
               <div className="form-group" key={key}>
-                <label htmlFor={key}>
-                  {key.replace(/([A-Z])/g, " $1").toUpperCase()}
-                </label>
+                <label htmlFor={key}>{key.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
                 <input
                   type={key === "email" ? "email" : key === "phone" || key === "pincode" ? "number" : "text"}
                   id={key}
@@ -130,66 +117,72 @@ const Checkout = () => {
 
           <div className="order-summary">
             <h2 className="section-title">Order Summary</h2>
-            {cartItems.map((item) => (
-              <div key={item.id} className="summary-item">
-                <div className="product-details">
-                  <img src={item.image} alt={item.name} className="product-image" />
-                  <div>
-                    <h3>{item.name}</h3>
-                    <p>Quantity: {item.quantity}</p>
+            {cartItems.length > 0 ? (
+              <>
+                {cartItems.map((item) => (
+                  <div key={item.id} className="summary-item">
+                    <div className="product-details">
+                      {/* <img
+                        src={item.image || "https://via.placeholder.com/150"}
+                        alt={item.name}
+                        className="product-image"
+                      /> */}
+                      <div>
+                        <h3>{item.name}</h3>
+                        <p>Quantity: {item.quantity}</p>
+                      </div>
+                    </div>
+                    <div className="price">₹{(item.price * item.quantity).toFixed(2)}</div>
+                  </div>
+                ))}
+
+                <div className="form-group">
+                  <label htmlFor="coupon">Coupon</label>
+                  <input
+                    type="text"
+                    id="coupon"
+                    placeholder="Enter coupon..."
+                    value={coupon}
+                    onChange={(e) => setCoupon(e.target.value)}
+                    disabled={couponApplied}
+                  />
+                  <button onClick={applyCoupon} disabled={couponApplied} className={`apply-button ${couponApplied ? "disabled" : ""}`}>
+                    {couponApplied ? "Coupon Applied" : "Apply Coupon"}
+                  </button>
+                </div>
+
+                <div className="total-section">
+                  <div className="summary-item">
+                    <span>Subtotal</span>
+                    <span className="price">₹{subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="summary-item">
+                    <span>Shipping</span>
+                    <span className="price">₹{shipping.toFixed(2)}</span>
+                  </div>
+                  <div className="summary-item">
+                    <span>GST (10%)</span>
+                    <span className="price">₹{tax.toFixed(2)}</span>
+                  </div>
+                  {couponApplied && (
+                    <div className="summary-item">
+                      <span>Coupon Discount</span>
+                      <span className="price">-₹{couponDiscount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="summary-item">
+                    <strong>Total</strong>
+                    <strong className="total-price">₹{total.toFixed(2)}</strong>
                   </div>
                 </div>
-                <div className="price">₹{item.price.toFixed(2)}</div>
-              </div>
-            ))}
 
-            <div className="form-group">
-              <label htmlFor="coupon">Coupon</label>
-              <input
-                type="text"
-                id="coupon"
-                placeholder="Coupon..."
-                value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
-                disabled={couponApplied}
-              />
-              <button
-                onClick={applyCoupon}
-                disabled={couponApplied}
-                className={`apply-button ${couponApplied ? "disabled" : ""}`}
-              >
-                {couponApplied ? "Coupon Applied" : "Apply Coupon"}
-              </button>
-            </div>
-
-            <div className="total-section">
-              <div className="summary-item">
-                <span>Subtotal</span>
-                <span className="price">₹{subtotal.toFixed(2)}</span>
-              </div>
-              <div className="summary-item">
-                <span>Shipping</span>
-                <span className="price">₹{shipping.toFixed(2)}</span>
-              </div>
-              <div className="summary-item">
-                <span>GST</span>
-                <span className="price">₹{tax.toFixed(2)}</span>
-              </div>
-              {couponApplied && (
-                <div className="summary-item">
-                  <span>Coupon Discount</span>
-                  <span className="price">-₹{couponDiscount.toFixed(2)}</span>
-                </div>
-              )}
-              <div className="summary-item">
-                <strong>Total</strong>
-                <strong className="total-price">₹{total.toFixed(2)}</strong>
-              </div>
-            </div>
-
-            <button className="checkout-button" onClick={handleCheckout}>
-              Complete Purchase
-            </button>
+                <button className="checkout-button" onClick={handleCheckout}>
+                  Complete Purchase
+                </button>
+              </>
+            ) : (
+              <p>Your cart is empty.</p>
+            )}
           </div>
         </div>
       </div>

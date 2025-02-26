@@ -29,11 +29,21 @@ import DropMenu1 from "../DropMenu1/DropMenu1";
 import DropMenu3 from "../DropMenu3/DropMenu3";
 import DropMenu4 from "../DropMenu4/DropMenu4";
 import DropMenu5 from "../DropMenu5/DropMenu5";
+import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom';
+
+
 const Header = ({ setSearchTerm }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
   const [user, setUser] = useState(null);
-
+  const [cartCount, setCartCount] = useState(0);
+// Inside your Header component:
+const { getCartTotals } = useCart();
+const { itemCount } = getCartTotals();
+const {cartItems, setCartItems } = useCart();
+const navigate = useNavigate();
+const sessionCartKey = "guest_cart";
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -42,7 +52,29 @@ const Header = ({ setSearchTerm }) => {
     }
   }, []);
 
-
+  // Update cart count when component mounts and when localStorage changes
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      // Count total quantity of all items
+      const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+      setCartCount(totalItems);
+    };
+    
+    // Initial count
+    updateCartCount();
+    
+    // Listen for storage events to update cart count when changes happen in other components
+    window.addEventListener('storage', updateCartCount);
+    
+    // Custom event for cart updates within the same window
+    window.addEventListener('cartUpdated', updateCartCount);
+    
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cartUpdated', updateCartCount);
+    };
+  }, []);
 
   // Sample multi-level menu data
   const menuItems = [
@@ -225,8 +257,8 @@ const Header = ({ setSearchTerm }) => {
     },
 
     {
-      label: "Company",
-      icon: <img src={cart} alt="" style={{ width: "20px", height: "20px" }} />,
+      label: "Cart",
+      icon: <ShoppingCart style={{ width: "20px", height: "20px" }} />,
     },
   ];
 
@@ -237,6 +269,8 @@ const Header = ({ setSearchTerm }) => {
       [label]: !prev[label],
     }));
   };
+
+  
 
   // Recursive function to render menu items
   const renderMenuItems = (items) => {
@@ -258,6 +292,15 @@ const Header = ({ setSearchTerm }) => {
       </div>
     ));
   };
+  const logout = () => {
+    localStorage.removeItem("user"); // Remove user session
+    sessionStorage.removeItem(sessionCartKey); // Clear guest cart
+    if (typeof setCartItems === "function") {
+      setCartItems([]); // Reset cart context only if the function exists
+    }
+
+    navigate("/"); // Redirect to home
+  };
 
 
   return (
@@ -278,14 +321,6 @@ const Header = ({ setSearchTerm }) => {
           />
           <button className="search-button">🔍</button>
         </div>
-        {/* Display username if logged in, otherwise show Login/SignUp */}
-        {/* <div className="user-section">
-          {user ? (
-            <span>Welcome, {user.firstName}!</span>  // Show user name when logged in
-          ) : (
-            <Link href="/user/login">Login/SignUp</Link>
-          )}
-        </div> */}
 
         {user ? (
           <div className="user-info">
@@ -294,21 +329,20 @@ const Header = ({ setSearchTerm }) => {
               localStorage.removeItem('user'); // Remove user from storage
               setUser(null); // Reset state
             }}>
-              Logout
-            </button>
+              
+            </button> <button onClick={logout}>Logout</button>
           </div>
         ) : (
           <Link href="/user/login">Login/SignUp</Link>
         )}
 
         <div className="cart">
-
           <div className="cart-icon-container">
-            <Link
-              href="/cart"
-
-            ><ShoppingCart className="cart-icon" /></Link>
-            {/* {cartItems > 0 && <span className="cart-count">{cartItems}</span>} */}
+            <Link href="/cart">
+              <ShoppingCart className="cart-icon" />
+              {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+              
+            </Link>
           </div>
         </div>
         <div className="hamburger">
@@ -341,7 +375,6 @@ const Header = ({ setSearchTerm }) => {
       </div>
       <div className="nav">
         <ul className="nav-links">
-
           <div className="menu-pic">
             <img src={product} alt="" />
             <li>
@@ -372,7 +405,6 @@ const Header = ({ setSearchTerm }) => {
               <DropMenu5 />
             </li>
           </div>
-
         </ul>
       </div>
       <hr />

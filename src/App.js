@@ -12,12 +12,14 @@ import Cart from './components/cart/Cart';
 import Productpage from './pages/Productpage/Productpage';
 import ProductDetailpage from './pages/ProductDetailpage/ProductDetailpage';
 import Checkout from './pages/Checkout/Checkout';
-import { CartProvider } from './context/CartContext';
+import { CartProvider } from './components/context/CartContext';
 import EnquiryForm from './components/EnquiryForm/EnquiryForm';
 import Form from './components/Form/Form';
 import Leader from './components/Leaders/Leader';
 import Testimonials from './components/Testimonials/Testimonials';
 import About from './components/About/About';
+import TopTranding from './components/TopTranding/TopTranding';
+
 
 function App() {
   return (
@@ -35,9 +37,10 @@ function App() {
        <Route path="/school-profile" element={<SeProfile/>}/>
        <Route path="/se-profile" element={<SchoolProfile/>}/>
        <Route path='/cart' element={<Cart/>}/>
+       <Route path='/checkout' element={<Checkout/>}/>
        <Route path='/product' element={<Productpage/>}/>
        <Route path='/productdetail' element={<ProductDetailpage/>}/>
-       <Route path='/checkout' element={<Checkout/>}/>
+       
        <Route path='/enquiryform' element={<EnquiryForm/>}/>
        <Route path='/form' element={<Form/>}/>
        <Route path='/leader' element={<Leader/>}/>

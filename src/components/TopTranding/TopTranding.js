@@ -1,126 +1,104 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./TopTranding.css";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-import {Link} from "react-router-dom"
-// Import Swiper styles
+import { Link, useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
-import 'swiper/css/navigation';
-
-// import required modules
+import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
+import { useCart } from "../context/CartContext"; // Import the cart context
+
 const TopTranding = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { addToCart } = useCart(); // Use the cart context
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("http://localhost:5000/api/products/top-trending")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setProducts(data.data);
+        } else {
+          console.error("API returned an error:", data.message);
+          setProducts([]);
+        }
+      })
+      .catch((error) => console.error("Error fetching trending products:", error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Function to handle product click - opens product detail
+  const handleProductClick = (productId) => {
+    window.open(`http://localhost:3000/productdetail/${productId}`, '_blank');
+  };
+
+  // Function to add product to cart and navigate to checkout
+  const handleAddToCart = async (product, event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const success = await addToCart(product);
+    if (success) {
+        alert("Item added to cart!");
+        // navigate("/cart"); // Redirect to the cart page
+    } else {
+        alert("Failed to add item to cart!");
+    }
+  };
+
   return (
     <div className="top-categorish">
-      <h1 className="title">Top Tranding</h1>
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={10}
-        pagination={{
-          clickable: true,
-        }}
-        breakpoints={{
-          640: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 40,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 50,
-          },
-          1200: {
-            slidesPerView: 4,
-            spaceBetween: 50,
-          },
-          1600: {
-            slidesPerView: 5,
-            spaceBetween: 50,
-          },
-        }}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        <div className="card-Container">
-          <SwiperSlide>
-           
-            <img src="https://m.media-amazon.com/images/I/816uYhnJ0KL._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>Cable World® New Kids Designer Hardtop Pencil Case for Girls and Women (Multi Color) (Multi Design)</p>
-            
-
-            <h5>₹294 <span>M.R.P: <del>₹1000</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-          </SwiperSlide>
-          <SwiperSlide>
-           
-          <img src="https://m.media-amazon.com/images/I/81jKjK9tNTL._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>Craftinger DIY 85 Pcs Pro Resin Art Kit with 200 Gm Resin and Coasters Alphabet Keychain Earring Making Kit with Pigment Glitter Mica </p>
-           
-
-            <h5>₹874 <span>M.R.P: <del>₹1499</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-         </SwiperSlide> 
-          <SwiperSlide>
-           
-          <img src="https://m.media-amazon.com/images/I/510YRHHfJWS._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>DCloud Hub Metal Folding Student Chair with Writing Pad for Work from Home Study - Brown</p>
-             
-
-            <h5>₹2599 <span>M.R.P: <del>₹7000</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-         </SwiperSlide> 
-          <SwiperSlide>
-           
-          <img src="https://m.media-amazon.com/images/I/51QDXqSjIgL._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>ALKOSIGN Dual Seater Bench with Back Support Desk - Sturdy Cast Iron Frame with Pre Laminated MDF Board </p>
-           
-
-            <h5>₹6515 <span>M.R.P: <del>₹6789</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-         </SwiperSlide>  
-         <SwiperSlide>
-         <img src="https://m.media-amazon.com/images/I/61IRzz2jr5L._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>NEXT GEEK Solar Power, Simple Circuit,Buzzer, Water Pump,Project kit Science Experiment Electronic kit for Kids with Instruction Manual</p>
-             
-
-            <h5>₹329 <span>M.R.P: <del>₹799</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-           
-         </SwiperSlide>  
-         <SwiperSlide>
-         <img src="https://m.media-amazon.com/images/I/616UwVmh1WL._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>Lenovo Tab P12|12.7 Inch,3K Display|8 Gb,256 Gb (Expandable Up to 1 Tb)|10200 Mah Battery|Jbl Quad Speakers with Dolby Atmos</p>
-             
-
-            <h5>₹2599 <span>M.R.P: <del>₹4299</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-         </SwiperSlide> 
-          <SwiperSlide>
-          <img src="https://m.media-amazon.com/images/I/61STzZkAGSL._AC_UY218_.jpg" alt="swiper" srcset="" />
-            <p>Lenovo ThinkBook 14 Intel 13th Gen Core i3 14" (35.56cm) WUXGA IPS 300 Nits Antiglare Thin and Light Laptop </p>
-             
-
-            <h5>₹43890<span>M.R.P: <del>₹50000</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-           
-         </SwiperSlide> 
-          <SwiperSlide>
-          <img src="https://m.media-amazon.com/images/I/71qdZRw5nTL._AC_UL320_.jpg" alt="swiper" srcset="" />
-            <p>Apsara Matt Magic 2.0 Pencil, Writing Pencils With Dual Color Wood & Long-lasting Fun, Hexagonal Body for Strong Grip</p>
-            
-
-            <h5>₹60<span>M.R.P: <del>₹80</del></span>(73% off)</h5>
-            <Link to='/cart'><button>Add to cart</button></Link>
-          
-         </SwiperSlide> 
-         
-        </div>
-      </Swiper>
+      <h1 className="title">Top Trending</h1>
+      
+      {loading ? (
+        <div className="loading">Loading trending products...</div>
+      ) : products.length === 0 ? (
+        <div className="no-products">No trending products available</div>
+      ) : (
+        <Swiper
+          slidesPerView={1}
+          spaceBetween={10}
+          pagination={{ clickable: true }}
+          breakpoints={{
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            768: { slidesPerView: 2, spaceBetween: 40 },
+            1024: { slidesPerView: 3, spaceBetween: 50 },
+            1200: { slidesPerView: 4, spaceBetween: 50 },
+            1600: { slidesPerView: 5, spaceBetween: 50 },
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {products.map((product) => (
+            <SwiperSlide key={product.id || product._id}>
+              <Link to={`/product/${product.name}`} className="product-image-link">
+                <img 
+                  src={product.images && product.images.length > 0 
+                    ? product.images[0] 
+                    : "/placeholder.jpg"} 
+                  alt={product.name}
+                  onError={(e) => {
+                    console.log("Image failed to load:", e.target.src);
+                    e.target.src = "/placeholder.jpg";
+                  }}
+                />
+              </Link>
+              <div
+                className="product-name-link" 
+                onClick={() => handleProductClick(product.id || product._id)}
+              >
+                <p>{product.short_description || product.name}</p>
+              </div>
+              <h5>₹{product.price} <span>M.R.P: <del>₹{(product.price * 1.3).toFixed(2)}</del></span> (30% off)</h5>
+              <button onClick={(e) => handleAddToCart(product, e)}>Add to cart</button>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </div>
   );
 };

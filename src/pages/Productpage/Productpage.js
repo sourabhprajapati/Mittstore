@@ -6,7 +6,7 @@ import acdamic from "../../assets/Academicmaterials.jpg";
 import schoolsupplies from "../../assets/SchoolSupplies.jpg";
 import ToysGames from "../../assets/ToyGames.jpg";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../components/context/CartContext";
 
 const products = [
   {

@@ -107,7 +107,35 @@
     background-color: #124ea1;
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(66, 153, 225, 0.2);
+
+
   }
+
+  /* Add these styles to your TopTranding.css file */
+
+.product-image-link {
+  display: block;
+  width: 100%;
+  height: 55%;
+  overflow: hidden;
+  background-color: #F7F7F7;
+}
+
+.product-name-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+}
+
+.product-name-link:hover {
+  color: #053861;
+}
+
+/* Optional: Add a subtle indication that these elements are clickable */
+.product-image-link:hover {
+  cursor: pointer;
+}
   @media (max-width: 1200px){
     .top-categorish .title{
      
