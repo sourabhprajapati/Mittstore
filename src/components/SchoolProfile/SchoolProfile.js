@@ -9,12 +9,25 @@ import { BiSolidSchool } from "react-icons/bi";
 import { FaChildReaching } from "react-icons/fa6";
 const SchoolProfile = () => {
   const [activeTab, setActiveTab] = useState('redeemPoints');
+  const [generatedCoupon, setGeneratedCoupon] = useState(null); 
  const [user, setUser] = useState({
     full_name: '',
-    email: '',
-    role: '',
+    role:''
+    
     
   });
+  const generateCoupon = () => {
+    const randomCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const discounts = ['10% off', '20% off', 'Free Shipping', '₹100 off'];
+    const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
+
+    setGeneratedCoupon({
+      code: randomCode,
+      discount: randomDiscount,
+      expiry: new Date().toLocaleDateString(),
+    });
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'wishlist':
@@ -180,6 +193,35 @@ const SchoolProfile = () => {
             <button className="btn-primary">Save Preferences</button>
           </div>
         );
+        case 'Genrate coupons':
+  return (
+    <div className="content-area">
+      <h2><Ticket className="icon" /> Generate Coupons</h2>
+      <div className="generate-coupon">
+        {/* Display School Name */}
+        <div className="school-name-box">
+          <label htmlFor="school-name">School Name:</label>
+          <input type="text" id="school-name" value={user.full_name} disabled />
+        </div>
+
+        {/* Generate Coupon Button */}
+        <button className="btn-primary" onClick={generateCoupon}>
+          Generate Coupon
+        </button>
+
+        {/* Display Generated Coupon Details */}
+        {generatedCoupon && (
+          <div className="coupon-details">
+            <h3>Coupon Code: {generatedCoupon.code}</h3>
+            <p>Discount: {generatedCoupon.discount}</p>
+            <p>Expires on: {generatedCoupon.expiry}</p>
+            <p>School: {user.full_name}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
         case 'total Student':
   return (
     <div className="content-area">
@@ -213,27 +255,24 @@ const SchoolProfile = () => {
     }
   };
   useEffect(() => {
-        // Simulating fetching user data from your backend (replace this with actual API call)
-        const fetchUserData = async () => {
-          // Replace with your API call, e.g., fetch('/api/user')
-          const response = await fetch('http://localhost:5000/api/users');
-          const data = await response.json();
-          console.log(data)
-          // Assuming the backend returns an object like { name: 'Sourabh', email: 'sourabhprajapati920@gmail.com' }
-          const loggedInUser = data.find(user => user.role === 'school'); // Change 'student' to the desired role
-         
-        
-            setUser({
-              full_name: loggedInUser.full_name,
-              email: loggedInUser.email,
-              role: loggedInUser.role,
-            });
-            console.log(user)
-    
-        };
-    
-        fetchUserData();
-      }, []);
+    const fetchSchoolDetails = async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) return;
+      
+  
+      // try {
+      //   const response = await fetch(`http://localhost:5000/api/school-details/${user.id}`);
+      //   const data = await response.json();
+      //   setUser({ full_name: data.schoolName,role:data.role} );
+      // } catch (err) {
+      //   console.error("Error fetching school name:", err);
+      // }
+      setUser({ full_name: user.schoolName,role:user.role} );
+
+    };
+    fetchSchoolDetails();
+  }, []);
+  
 
   return (
     <div className="profile-container">
@@ -246,7 +285,7 @@ const SchoolProfile = () => {
             <span className="user-status">sourabhprajapati920@gmail.com</span>
           </div>
         </div> */}
-         {user.role === 'sschool' && (
+         {user.role === 'school' && (
         <div className="user-info">
           <h1>School Dashboard</h1>
           <div className="user-details">

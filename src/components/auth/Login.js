@@ -59,9 +59,14 @@ function Login() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(data.user)); // Store user data
+       
+        localStorage.setItem('seEmployeeId', data.user.employeeId);
+
+
         switch (data.user.role) {
           case 'student':
             navigate('/');

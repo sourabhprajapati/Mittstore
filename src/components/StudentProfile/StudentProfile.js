@@ -183,29 +183,25 @@ const StudentProfile = () => {
     }
   };
   useEffect(() => {
-    // Simulating fetching user data from your backend (replace this with actual API call)
-    const fetchUserData = async () => {
-      // Replace with your API call, e.g., fetch('/api/user')
-      const response = await fetch('http://localhost:5000/api/users');
-      const data = await response.json();
-      console.log(data)
-      // Assuming the backend returns an object like { name: 'Sourabh', email: 'sourabhprajapati920@gmail.com' }
-      const loggedInUser = data.find(user => user.role === 'student'); // Change 'student' to the desired role
-     
-    
-        setUser({
-          full_name: loggedInUser.full_name,
-          email: loggedInUser.email,
-          role: loggedInUser.role,
-        });
-        console.log(user)
+    const fetchStudentDetails = async () => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (!storedUser) return;
 
+      try {
+        const response = await fetch(`http://localhost:5000/api/users/${storedUser.id}`);
+        const data = await response.json();
+        setUser({
+          full_name: data.full_name,
+          email: data.email,
+          role: data.role,
+        });
+      } catch (err) {
+        console.error("Error fetching student details:", err);
+      }
     };
 
-    fetchUserData();
-  }, []); // Empty dependency array means this effect runs only once, like componentDidMount
-
-
+    fetchStudentDetails();
+  }, []);
   return (
     <div className="profile-container">
       <header className="profile-header">
