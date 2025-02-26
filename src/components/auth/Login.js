@@ -59,18 +59,23 @@ function Login() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(data.user)); // Store user data
+       
+        localStorage.setItem('seEmployeeId', data.user.employeeId);
+
+
         switch (data.user.role) {
           case 'student':
-            navigate('/student-profile');
+            navigate('/');
             break;
           case 'se':
-            navigate('/se-profile');
+            navigate('/');
             break;
           case 'school':
-            navigate('/school-profile');
+            navigate('/');
             break;
           default:
             setError('Unknown user type.');
@@ -138,6 +143,7 @@ function Login() {
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
+          
         </form>
         <div className="links">
           <Link href="/forgetpass" className="forgot-password">

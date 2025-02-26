@@ -33,6 +33,7 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 
+import DropMenu6 from "../DropMenu6/DropMenu6";
 const Header = ({ setSearchTerm }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
@@ -323,19 +324,12 @@ const sessionCartKey = "guest_cart";
         </div>
 
         {user ? (
-          <div className="user-info">
-            <span>Welcome, {user.firstName}!</span>
-            <button onClick={() => {
-              localStorage.removeItem('user'); // Remove user from storage
-              setUser(null); // Reset state
-            }}>
-              
-            </button> <button onClick={logout}>Logout</button>
+          <div className="user-info1">
+            <DropMenu6 user={user} setUser={setUser} />
           </div>
         ) : (
           <Link href="/user/login">Login/SignUp</Link>
         )}
-
         <div className="cart">
           <div className="cart-icon-container">
             <Link href="/cart">
