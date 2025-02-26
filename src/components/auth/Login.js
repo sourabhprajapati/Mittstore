@@ -59,16 +59,33 @@ function Login() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(data.user)); // Store user data
-        navigate('/'); // Redirect to home page
+       
+        localStorage.setItem('seEmployeeId', data.user.employeeId);
+
+
+        switch (data.user.role) {
+          case 'student':
+            navigate('/');
+            break;
+          case 'se':
+            navigate('/');
+            break;
+          case 'school':
+            navigate('/');
+            break;
+          default:
+            setError('Unknown user type.');
+        }
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
         setCaptcha(generateCaptcha());
         setCaptchaInput('');
       }
-    } catch (error) {
+    } catch (err) {
       setError('Server error. Please try again later.');
       setCaptcha(generateCaptcha());
       setCaptchaInput('');
@@ -126,6 +143,7 @@ function Login() {
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
+          
         </form>
         <div className="links">
           <Link href="/forgetpass" className="forgot-password">

@@ -15,6 +15,10 @@ import Form from './components/Form/Form';
 import Leader from './components/Leaders/Leader';
 import Testimonials from './components/Testimonials/Testimonials';
 import About from './components/About/About';
+import StudentProfile from './components/StudentProfile/StudentProfile';
+import SchoolProfile from './components/SchoolProfile/SchoolProfile';
+import SeProfile from './components/seProfile/SeProfile';
+
 
 function App() {
   return (
@@ -28,6 +32,9 @@ function App() {
        <Route path='/forgetpass' element={<ForgetPassword/>}/>
        <Route path='/' element={<Home />}/>
        <Route path='/profilepage' element={<Profilepage/>}/>
+       <Route path="/student-profile" element={<StudentProfile/>}/>
+       <Route path="/school-profile" element={<SchoolProfile/>}/>
+       <Route path="/se-profile" element={<SeProfile/>}/>
        <Route path='/cart' element={<Cart/>}/>
        <Route path='/product' element={<Productpage/>}/>
        <Route path='/productdetail' element={<ProductDetailpage/>}/>

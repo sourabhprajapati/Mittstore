@@ -114,6 +114,7 @@
   font-weight: bold;
 }
 
+
 .title1 button {
   color: white; /* Close button color */
 }
@@ -217,7 +218,11 @@
   border-radius: 5px;
   font-weight: bold;
 }
-
+/* .user-info1{
+  display: flex;
+  background-color: red;
+  width: 200px;
+} */
 
 /* Breakpoints */
 

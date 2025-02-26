@@ -1,12 +1,16 @@
 import React from 'react'
-import { useState } from 'react';
-import "./Profile.css"
-import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
-import men from "../../assets/men.jpg"
+import { useState ,useEffect} from 'react';
+import "./StudentProfile.css"
+import { Heart, MapPin, Ticket,  Settings, Bell,  Star, Zap } from 'lucide-react';
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
-const Profile = () => {
+const StudentProfile = () => {
   const [activeTab, setActiveTab] = useState('wishlist');
+  const [user, setUser] = useState({
+    full_name: '',
+    email: '',
+    role: '',
+  });
 
   const renderContent = () => {
     switch (activeTab) {
@@ -79,31 +83,7 @@ const Profile = () => {
             </div>
           </div>
         );
-      // case 'redeemPoints':
-        return (
-          <div className="content-area">
-            <h2><Gift className="icon" /> Redeem Points</h2>
-            <div className="points-info">
-              <div className="points-balance">
-                <h3>Current Balance</h3>
-                <p className="points">1,500 pts</p>
-              </div>
-              <div className="points-value">
-                <h3>Value</h3>
-                <p className="value">₹15.00</p>
-              </div>
-            </div>
-            <div className="redeem-options">
-              <h3>Redeem for:</h3>
-              <div className="redeem-grid">
-                <button className="btn-primary"><ShoppingBag size={18} /> ₹5 Off Coupon (500 pts)</button>
-                <button className="btn-primary"><ShoppingBag size={18} /> ₹10 Off Coupon (1000 pts)</button>
-                <button className="btn-primary"><ShoppingBag size={18} /> Free Shipping (750 pts)</button>
-                <button className="btn-primary"><ShoppingBag size={18} /> ₹20 Off Coupon (2000 pts)</button>
-              </div>
-            </div>
-          </div>
-        );
+    
       case 'settings':
         return (
           <div className="content-area">
@@ -177,19 +157,48 @@ const Profile = () => {
         return <div className="content-area">Select a tab to view content.</div>;
     }
   };
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (!storedUser) return;
 
+      try {
+        const response = await fetch(`http://localhost:5000/api/users/${storedUser.id}`);
+        const data = await response.json();
+        setUser({
+          full_name: data.full_name,
+          email: data.email,
+          role: data.role,
+        });
+      } catch (err) {
+        console.error("Error fetching student details:", err);
+      }
+    };
+
+    fetchStudentDetails();
+  }, []);
   return (
     <div className="profile-container">
       <header className="profile-header">
-        <h1>My Profile</h1>
-        <div className="user-info">
-          <img src={men} alt="User Avatar" className="avatar" />
-          <div className="user-details">
-            <span className="user-name">Sourabh</span>
-            <span className="user-status">sourabhprajapati920@gmail.com</span>
-          </div>
+      {/* <h1>My Profile</h1>
+      <div className="user-info">
+        <img src={user.avatar} alt="User Avatar" className="avatar" />
+        <div className="user-details">
+          <span className="user-name">{user.name}</span>
+          <span className="user-status">{user.email}</span>
         </div>
-      </header>
+      </div> */}
+     {user.role === 'student' && (
+        <div className="user-info">
+          <h1>Student Dashboard</h1>
+          <div className="user-details">
+          <span className="user-name">{user.full_name}</span>
+          {/* <span className="user-status">{user.email}</span> */}
+        </div>
+        </div>
+      )}
+
+    </header>
       <div className="profile-content">
         <nav className="sidebar">
           <button
@@ -199,6 +208,14 @@ const Profile = () => {
             <Heart size={24} />
             <span>Wishlist</span>
           </button>
+          <button
+            className={`nav-button ${activeTab === 'My order' ? 'active' : ''}`}
+            onClick={() => setActiveTab('My order')}
+          >
+            <Heart size={24} />
+            <span>My order</span>
+          </button>
+          
           <button
             className={`nav-button ${activeTab === 'addressBook' ? 'active' : ''}`}
             onClick={() => setActiveTab('addressBook')}
@@ -242,4 +259,4 @@ const Profile = () => {
     </div>)
 }
 
-export default Profile
+export default StudentProfile
