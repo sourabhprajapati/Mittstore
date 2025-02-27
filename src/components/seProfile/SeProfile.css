@@ -432,7 +432,7 @@ input:checked + .slider:before {
 
 .table-header, .table-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   padding: 12px;
   border-bottom: 1px solid #e0e0e0;
   text-align: center;
@@ -449,10 +449,76 @@ input:checked + .slider:before {
 }
 
 .table-column {
-  padding: 8px 0;
+  padding: 2px 0;
 }
 
+.coupon-green {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  color: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
 
+.coupon-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* Updated table styling for the Total School tab */
+.school-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  padding: 15px 0;
+  display: flex;
+}
+
+.table-row {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 0;
+  display: flex;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background-color: #f9f9f9;
+}
+
+.table-column {
+  padding: 8px 15px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.value10{
+  font-weight: bold;
+}
+
+.value1{
+  color:#4a90e2
+}
 @media (max-width: 768px) {
   .profile-content {
     flex-direction: column;
