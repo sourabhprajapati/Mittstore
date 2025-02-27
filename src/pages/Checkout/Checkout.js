@@ -7,6 +7,8 @@ import axios from "axios";
 const Checkout = () => {
   const { cartItems } = useCart(); // Fetch cart items from context
   const [coupon, setCoupon] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [couponApplied, setCouponApplied] = useState(false);
   const [additionalDiscount, setAdditionalDiscount] = useState(0);
   const [formData, setFormData] = useState({
@@ -81,7 +83,20 @@ const Checkout = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:5000/api/orders", orderData);
+      const response = await axios.post("http://localhost:5000/api/orders", {
+        userId: user?.id || null, // Pass userId or null if guest
+        fullName: formData.name,
+        email: formData.email,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+        phone: formData.phone,
+        total,
+        couponCode: couponApplied ? coupon : null,
+        cartItems: cartItems // Pass the entire cart
+      });
+      
       alert(response.data.message);
       setFormData({ name: "", email: "", address: "", city: "", state: "", pincode: "", phone: "" });
       setCoupon("");
