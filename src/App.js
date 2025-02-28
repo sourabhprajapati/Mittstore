@@ -19,7 +19,7 @@ import TopTranding from './components/TopTranding/TopTranding';
 import StudentProfile from './components/StudentProfile/StudentProfile';
 import SchoolProfile from './components/SchoolProfile/SchoolProfile';
 import SeProfile from './components/seProfile/SeProfile';
-
+import OrderSuccess from './components/OrderSuccess/OrderSuccess';
 
 function App() {
   return (
@@ -45,6 +45,7 @@ function App() {
        <Route path='/form' element={<Form/>}/>
        <Route path='/leader' element={<Leader/>}/>
        <Route path='/testinomials' element={<Testimonials/>}/>
+       <Route path='/OrderSuccess' element={<OrderSuccess/>}/>
 
      </Routes>
          

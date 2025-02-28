@@ -561,7 +561,7 @@ const sendCouponMail = async () => {
             className={`nav-button ${activeTab === 'Genrate coupons' ? 'active' : ''}`}
             onClick={() => setActiveTab('Genrate coupons')}
           >
-            <BiSolidSchool size={24} />
+            <Ticket size={24} />
             <span>Generate Coupons</span>
           </button>
           {/* <button

@@ -5,26 +5,16 @@ import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } f
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
 import { FaChildReaching } from "react-icons/fa6";
+import { CgShoppingCart } from "react-icons/cg";
 const SchoolProfile = () => {
   const [activeTab, setActiveTab] = useState('redeemPoints');
-  const [generatedCoupon, setGeneratedCoupon] = useState(null); 
  const [user, setUser] = useState({
     full_name: '',
     role:''
     
     
   });
-  const generateCoupon = () => {
-    const randomCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-    const discounts = ['10% off', '20% off', 'Free Shipping', '₹100 off'];
-    const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
-
-    setGeneratedCoupon({
-      code: randomCode,
-      discount: randomDiscount,
-      expiry: new Date().toLocaleDateString(),
-    });
-  };
+  
 
   const renderContent = () => {
     switch (activeTab) {
@@ -191,34 +181,8 @@ const SchoolProfile = () => {
             <button className="btn-primary">Save Preferences</button>
           </div>
         );
-        case 'Genrate coupons':
-  return (
-    <div className="content-area">
-      <h2><Ticket className="icon" /> Generate Coupons</h2>
-      <div className="generate-coupon">
-        {/* Display School Name */}
-        <div className="school-name-box">
-          <label htmlFor="school-name">School Name:</label>
-          <input type="text" id="school-name" value={user.full_name} disabled />
-        </div>
-
-        {/* Generate Coupon Button */}
-        <button className="btn-primary" onClick={generateCoupon}>
-          Generate Coupon
-        </button>
-
-        {/* Display Generated Coupon Details */}
-        {generatedCoupon && (
-          <div className="coupon-details">
-            <h3>Coupon Code: {generatedCoupon.code}</h3>
-            <p>Discount: {generatedCoupon.discount}</p>
-            <p>Expires on: {generatedCoupon.expiry}</p>
-            <p>School: {user.full_name}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+        
+ 
 
         case 'total Student':
   return (
@@ -313,7 +277,7 @@ const SchoolProfile = () => {
             className={`nav-button ${activeTab === 'My order ' ? 'active' : ''}`}
             onClick={() => setActiveTab('My order')}
           >
-            <FaChildReaching size={24} />
+            <CgShoppingCart size={24} />
             <span>My order</span>
           </button>
 
@@ -324,13 +288,7 @@ const SchoolProfile = () => {
             <Ticket size={24} />
             <span>Coupons</span>
           </button>
-          <button
-            className={`nav-button ${activeTab === 'Genrate coupons' ? 'active' : ''}`}
-            onClick={() => setActiveTab('Genrate coupons')}
-          >
-            <Ticket size={24} />
-            <span>Genrate Coupons</span>
-          </button>
+          
 
 
 

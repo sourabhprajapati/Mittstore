@@ -4,6 +4,7 @@ import "./StudentProfile.css"
 import { Heart, MapPin, Ticket,  Settings, Bell,  Star, Zap } from 'lucide-react';
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
+import { CgShoppingCart } from "react-icons/cg";
 const StudentProfile = () => {
   const [activeTab, setActiveTab] = useState('wishlist');
   const [user, setUser] = useState({
@@ -212,7 +213,7 @@ const StudentProfile = () => {
             className={`nav-button ${activeTab === 'My order' ? 'active' : ''}`}
             onClick={() => setActiveTab('My order')}
           >
-            <Heart size={24} />
+            <CgShoppingCart size={24} />
             <span>My order</span>
           </button>
           

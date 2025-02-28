@@ -4,11 +4,15 @@ import Header from "../../components/header/Header";
 import { useCart } from "../../components/context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const { cartItems } = useCart();
   const { user } = useAuth();  // Changed from currentUser to user
   const [coupon, setCoupon] = useState("");
+  const user1 = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+
   const [couponApplied, setCouponApplied] = useState(false);
   const [additionalDiscount, setAdditionalDiscount] = useState(0);
   const [couponError, setCouponError] = useState("");
@@ -150,14 +154,29 @@ const Checkout = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/checkout/process", orderData);
-      alert(response.data.message);
+      const response = await axios.post("http://localhost:5000/api/orders", {
+        userId: user1?.id || null, // Pass userId or null if guest
+        fullName: formData.name,
+        email: formData.email,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+        phone: formData.phone,
+        total,
+        couponCode: couponApplied ? coupon : null,
+        cartItems: cartItems // Pass the entire cart
+      });
+      
+      // alert(response.data.message);
       // Reset form after successful checkout
+      navigate("/OrderSuccess");
       setFormData({ name: "", email: "", address: "", city: "", state: "", pincode: "", phone: "" });
       setCoupon("");
       setCouponApplied(false);
       setAdditionalDiscount(0);
       // Clear cart functionality would typically be called here
+      // clearCart();
     } catch (error) {
       alert(error.response?.data?.error || "Failed to process order");
     } finally {
