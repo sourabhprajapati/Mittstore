@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState ,useEffect} from 'react';
 import "./StudentProfile.css"
-import { Heart, MapPin, Ticket,  Settings, Bell,  Star, Zap } from 'lucide-react';
+import { Heart, MapPin, Ticket,  Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
 import { CgShoppingCart } from "react-icons/cg";
@@ -110,6 +110,66 @@ const StudentProfile = () => {
             </form>
           </div>
         );
+        case 'My order':
+        return (
+          <div className="content-area">
+            <h2><ShoppingBag className="icon" /> My Orders</h2>
+            <div className="orders-list">
+              {orders.length === 0 ? (
+                <p>No orders found.</p>
+              ) : (
+                orders.map((order, index) => (
+                  <div key={index} className="order-card">
+                    <div className="order-header">
+                      <div className="order-meta">
+                        <span className="order-id">Order #: {order.id}</span>
+                        <span className="order-date">{order.createdAt}</span>
+                      </div>
+                    </div>
+
+                    <div className="order-items">
+                      {Array.isArray(order.items) ?
+                        order.items.map((item, itemIndex) => (
+                          <div key={itemIndex} className="order-item">
+                            <img src={item.image} alt={item.name} className="item-image" />
+                            <div className="item-details">
+                              <h4>{item.name}</h4>
+                              <div className="item-meta">
+                                <span>Quantity: {item.quantity}</span>
+                                <span>Price: ₹{item.price}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                        :
+                        JSON.parse(order.items).map((item, itemIndex) => (
+                          <div key={itemIndex} className="order-item">
+                            <img src={item.image} alt={item.name} className="item-image" />
+                            <div className="item-details">
+                              <h4>{item.name}</h4>
+                              <div className="item-meta">
+                                <span>Quantity: {item.quantity}</span>
+                                <span>Price: ₹{item.price}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+
+
+                    <div className="order-footer">
+                      <div className="order-total">
+                        <span>Total:</span>
+                        <span className="total-amount">₹{order.total}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        );
       case 'manageNotifications':
         return (
           <div className="content-area">
@@ -178,6 +238,24 @@ const StudentProfile = () => {
 
     fetchStudentDetails();
   }, []);
+  const [orders, setOrders] = useState([]);
+  
+    useEffect(() => {
+      const fetchOrders = async () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.email) return;
+    
+        try {
+          const response = await fetch(`http://localhost:5000/api/orders/email/${user.email}`);
+          const data = await response.json();
+          setOrders(data);
+        } catch (error) {
+          console.error("Error fetching orders:", error);
+        }
+      };
+    
+      fetchOrders();
+    }, []);
   return (
     <div className="profile-container">
       <header className="profile-header">
