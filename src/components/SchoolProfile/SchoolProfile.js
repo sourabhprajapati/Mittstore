@@ -1,19 +1,54 @@
 import React from 'react'
 import { useState,useEffect } from 'react';
 import "./SchoolProfile.css"
-import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
+import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap,CheckCircle,Package } from 'lucide-react';
 import supple from "../../assets/supplies.jpg"
 import {Link} from "react-router-dom"
 import { FaChildReaching } from "react-icons/fa6";
 import { CgShoppingCart } from "react-icons/cg";
+import { useLocation } from 'react-router-dom';
+
+
+
 const SchoolProfile = () => {
-  const [activeTab, setActiveTab] = useState('redeemPoints');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromUrl = queryParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'redeemPoints');
  const [user, setUser] = useState({
     full_name: '',
     role:''
     
     
   });
+  useEffect(() => {
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
+  const [orders] = useState([
+    {
+      id: 'ORD-1234',
+      date: '2023-07-20',
+      status: 'Delivered',
+      items: [
+        { name: 'Textbooks', price: 1200, quantity: 5, image: supple },
+        { name: 'Stationery Kit', price: 299, quantity: 2, image: supple }
+      ],
+      total: 1200 * 5 + 299 * 2
+    },
+    {
+      id: 'ORD-1235',
+      date: '2023-07-18',
+      status: 'Processing',
+      items: [
+        { name: 'Art Supplies', price: 599, quantity: 3, image: supple }
+      ],
+      total: 599 * 3
+    }
+  ]);
+  
   
 
   const renderContent = () => {
@@ -181,7 +216,54 @@ const SchoolProfile = () => {
             <button className="btn-primary">Save Preferences</button>
           </div>
         );
-        
+        case 'My order':
+        return (
+          <div className="content-area">
+            <h2><ShoppingBag className="icon" /> My Orders</h2>
+            <div className="orders-list">
+              {orders.map((order, index) => (
+                <div key={index} className="order-card">
+                  <div className="order-header">
+                    <div className="order-meta">
+                      <span className="order-id">Order #: {order.id}</span>
+                      <span className="order-date">{order.date}</span>
+                    </div>
+                    {/* <div className={`order-status ${order.status.toLowerCase()}`}>
+                      <CheckCircle size={16} />
+                      <span>{order.status}</span>
+                    </div> */}
+                  </div>
+
+                  <div className="order-items">
+                    {order.items.map((item, itemIndex) => (
+                      <div key={itemIndex} className="order-item">
+                        <img src={item.image} alt={item.name} className="item-image" />
+                        <div className="item-details">
+                          <h4>{item.name}</h4>
+                          <div className="item-meta">
+                            <span>Quantity: {item.quantity}</span>
+                            <span>Price: ₹{item.price}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="order-footer">
+                    <div className="order-total">
+                      <span>Total:</span>
+                      <span className="total-amount">₹{order.total}</span>
+                    </div>
+                    {/* <button className="btn-secondary">
+                      <Package size={16} />
+                      View Details
+                    </button> */}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
  
 
         case 'total Student':

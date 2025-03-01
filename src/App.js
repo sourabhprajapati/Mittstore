@@ -20,9 +20,11 @@ import StudentProfile from './components/StudentProfile/StudentProfile';
 import SchoolProfile from './components/SchoolProfile/SchoolProfile';
 import SeProfile from './components/seProfile/SeProfile';
 import OrderSuccess from './components/OrderSuccess/OrderSuccess';
+import { SearchProvider } from './context/SearchContext';
 
 function App() {
   return (
+    <SearchProvider>
    <CartProvider>
      <BrowserRouter>
      <Routes>
@@ -51,6 +53,7 @@ function App() {
          
      </BrowserRouter>
    </CartProvider>
+   </SearchProvider>
   );
 }
 

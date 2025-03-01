@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { ShoppingCart, Heart, Search, Menu, X } from "lucide-react";
 import "./Productpage.css";
 import Header from "../../components/header/Header";
@@ -7,6 +7,7 @@ import schoolsupplies from "../../assets/SchoolSupplies.jpg";
 import ToysGames from "../../assets/ToyGames.jpg";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../components/context/CartContext";
+import { SearchContext } from "../../context/SearchContext";
 
 const products = [
   {
@@ -70,7 +71,7 @@ const Productpage = () => {
   const [favorites, setFavorites] = useState(new Set());
   const [selectedCategory, setSelectedCategory] = useState(null);
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const { searchTerm ,setSearchTerm} = useContext(SearchContext);
   // const navigate = useNavigate();
   const { addToCart } = useCart();
   // const handleCardClick = (path) => {

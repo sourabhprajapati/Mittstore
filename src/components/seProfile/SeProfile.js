@@ -4,10 +4,15 @@ import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } f
 import men from "../../assets/men.jpg";
 import supple from "../../assets/supplies.jpg";
 import { Link } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import { BiSolidSchool } from "react-icons/bi";
 
 const SeProfile = () => {
-  const [activeTab, setActiveTab] = useState('Total School');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromUrl = queryParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'Total School');  
   const [schools, setSchools] = useState([]);
   const [schoolsWithCoupons, setSchoolsWithCoupons] = useState([]);
 
@@ -17,6 +22,12 @@ const SeProfile = () => {
     role: '',
     userId: '', // SE ID field
   });
+  useEffect(() => {
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
+  
 
   const [selectedSchool, setSelectedSchool] = useState('');
   const [generatedCoupon, setGeneratedCoupon] = useState(null); // state for the generated coupon

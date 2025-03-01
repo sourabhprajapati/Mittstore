@@ -25,6 +25,8 @@ import trust from "../../assets/trusted.png"
 import secure from "../../assets/secure.png"
 import customer from "../../assets/customer.png";
 import support from "../../assets/support.png";
+import { Link } from "react-router-dom";
+import { SearchContext } from "../../context/SearchContext"; // Import SearchContext
 
 
 
@@ -46,6 +48,8 @@ import TopTranding from "../../components/TopTranding/TopTranding";
 import HotDeal from "../../components/HotDeal/HotDeal";
 import Clients from "../../components/Clients/Clients";
 function Home() {
+  // const { searchTerm } = useContext(SearchContext);
+
   return (
     <div>
       <Header />
@@ -77,13 +81,17 @@ function Home() {
         className="mySwiper"
       >
         <SwiperSlide>
-          <img src={slide1} alt="" />
+          {/* <img src={slide1} alt="" /> */}
+          <img src="https://mittstore.com/cdn/shop/files/Website_1536x500px_1.jpg?v=1740646953&width=2136" alt="" />
+
         </SwiperSlide>
         <SwiperSlide>
-          <img src={slide2} alt="" />
+          {/* <img src={slide2} alt="" /> */}
+          <img src="https://mittstore.com/cdn/shop/files/Website_1536x500px_3.jpg?v=1740646952" alt="" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={slide3} alt="" />
+          {/* <img src={slide3} alt="" /> */}
+          <img src="https://mittstore.com/cdn/shop/files/Website_1536x500px_2.jpg?v=1740646953" alt="" />
         </SwiperSlide>
       </Swiper>
        <TopTranding/>
@@ -93,7 +101,7 @@ function Home() {
           <img src={poster} alt="" />
           <div className="title2">
             <h1>Mittsure Empowering Schools For an Enriching Experience</h1>
-            <button>Let's Discuss</button>
+            <Link to="/enquiryform"><button>Let's Discuss</button></Link>
           </div>
         </div>
       </div>

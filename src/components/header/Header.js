@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./header.css";
 import logo from "../../assets/logo.png";
 import { IoPerson } from "react-icons/io5";
@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { ShoppingCart } from 'lucide-react';
 // import { Link } from "react-router-dom";
 import List from "@mui/material/List";
+import { SearchContext } from "../../context/SearchContext";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -31,20 +32,37 @@ import DropMenu4 from "../DropMenu4/DropMenu4";
 import DropMenu5 from "../DropMenu5/DropMenu5";
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 
 
 import DropMenu6 from "../DropMenu6/DropMenu6";
-const Header = ({ setSearchTerm }) => {
+const Header = () => {
+  const { searchTerm, setSearchTerm } = useContext(SearchContext);
+  const navigate = useNavigate();
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const [openMenus, setOpenMenus] = useState({});
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
-// Inside your Header component:
-const { getCartTotals } = useCart();
-const { itemCount } = getCartTotals();
-const {cartItems, setCartItems } = useCart();
-const navigate = useNavigate();
-const sessionCartKey = "guest_cart";
+  // Inside your Header component:
+  const { getCartTotals } = useCart();
+  const { itemCount } = getCartTotals();
+  const { cartItems, setCartItems } = useCart();
+  const sessionCartKey = "guest_cart";
+  const handleSearch = () => {
+    setSearchTerm(localSearchTerm); // Update the global search term
+    navigate("/product"); // Navigate to the Productpage
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -61,16 +79,16 @@ const sessionCartKey = "guest_cart";
       const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
       setCartCount(totalItems);
     };
-    
+
     // Initial count
     updateCartCount();
-    
+
     // Listen for storage events to update cart count when changes happen in other components
     window.addEventListener('storage', updateCartCount);
-    
+
     // Custom event for cart updates within the same window
     window.addEventListener('cartUpdated', updateCartCount);
-    
+
     return () => {
       window.removeEventListener('storage', updateCartCount);
       window.removeEventListener('cartUpdated', updateCartCount);
@@ -271,7 +289,7 @@ const sessionCartKey = "guest_cart";
     }));
   };
 
-  
+
 
   // Recursive function to render menu items
   const renderMenuItems = (items) => {
@@ -318,7 +336,9 @@ const sessionCartKey = "guest_cart";
             type="text"
             className="search-input"
             placeholder="Search..."
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={localSearchTerm}
+            onChange={(e) => setLocalSearchTerm(e.target.value)}
+            onKeyUp={handleSearch}
           />
           <button className="search-button">🔍</button>
         </div>
@@ -331,11 +351,17 @@ const sessionCartKey = "guest_cart";
           <Link href="/user/login">Login/SignUp</Link>
         )}
         <div className="cart">
+          <div className="wishlist-icon-container">
+            <Link href="/profilepage?tab=wishlist">
+              <Heart className="wishlist-icon" />
+            </Link>
+
+          </div>
           <div className="cart-icon-container">
             <Link href="/cart">
               <ShoppingCart className="cart-icon" />
               {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
-              
+
             </Link>
           </div>
         </div>
