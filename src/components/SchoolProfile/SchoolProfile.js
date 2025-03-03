@@ -1,30 +1,75 @@
 import React from 'react'
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import "./SchoolProfile.css"
-import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
+import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap, CheckCircle, Package } from 'lucide-react';
 import supple from "../../assets/supplies.jpg"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { FaChildReaching } from "react-icons/fa6";
-const SchoolProfile = () => {
-  const [activeTab, setActiveTab] = useState('redeemPoints');
-  const [generatedCoupon, setGeneratedCoupon] = useState(null); 
- const [user, setUser] = useState({
-    full_name: '',
-    role:''
-    
-    
-  });
-  const generateCoupon = () => {
-    const randomCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-    const discounts = ['10% off', '20% off', 'Free Shipping', '₹100 off'];
-    const randomDiscount = discounts[Math.floor(Math.random() * discounts.length)];
+import { CgShoppingCart } from "react-icons/cg";
+import { useLocation } from 'react-router-dom';
 
-    setGeneratedCoupon({
-      code: randomCode,
-      discount: randomDiscount,
-      expiry: new Date().toLocaleDateString(),
-    });
-  };
+
+
+const SchoolProfile = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromUrl = queryParams.get('tab');
+
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'redeemPoints');
+  const [user, setUser] = useState({
+    full_name: '',
+    role: ''
+
+
+  });
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user || !user.email) return;
+  
+      try {
+        const response = await fetch(`http://localhost:5000/api/orders/email/${user.email}`);
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
+  
+
+  useEffect(() => {
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
+  // const [orders] = useState([
+  //   {
+  //     id: 'ORD-1234',
+  //     date: '2023-07-20',
+  //     status: 'Delivered',
+  //     items: [
+  //       { name: 'Textbooks', price: 1200, quantity: 5, image: supple },
+  //       { name: 'Stationery Kit', price: 299, quantity: 2, image: supple }
+  //     ],
+  //     total: 1200 * 5 + 299 * 2
+  //   },
+  //   {
+  //     id: 'ORD-1235',
+  //     date: '2023-07-18',
+  //     status: 'Processing',
+  //     items: [
+  //       { name: 'Art Supplies', price: 599, quantity: 3, image: supple }
+  //     ],
+  //     total: 599 * 3
+  //   }
+  // ]);
+
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -191,63 +236,97 @@ const SchoolProfile = () => {
             <button className="btn-primary">Save Preferences</button>
           </div>
         );
-        case 'Genrate coupons':
-  return (
-    <div className="content-area">
-      <h2><Ticket className="icon" /> Generate Coupons</h2>
-      <div className="generate-coupon">
-        {/* Display School Name */}
-        <div className="school-name-box">
-          <label htmlFor="school-name">School Name:</label>
-          <input type="text" id="school-name" value={user.full_name} disabled />
-        </div>
+      case 'My order':
+        return (
+          <div className="content-area">
+            <h2><ShoppingBag className="icon" /> My Orders</h2>
+            <div className="orders-list">
+              {orders.length === 0 ? (
+                <p>No orders found.</p>
+              ) : (
+                orders.map((order, index) => (
+                  <div key={index} className="order-card">
+                    <div className="order-header">
+                      <div className="order-meta">
+                        <span className="order-id">Order #: {order.id}</span>
+                        <span className="order-date">{order.createdAt}</span>
+                      </div>
+                    </div>
 
-        {/* Generate Coupon Button */}
-        <button className="btn-primary" onClick={generateCoupon}>
-          Generate Coupon
-        </button>
+                    <div className="order-items">
+                      {Array.isArray(order.items) ?
+                        order.items.map((item, itemIndex) => (
+                          <div key={itemIndex} className="order-item">
+                            <img src={item.image} alt={item.name} className="item-image" />
+                            <div className="item-details">
+                              <h4>{item.name}</h4>
+                              <div className="item-meta">
+                                <span>Quantity: {item.quantity}</span>
+                                <span>Price: ₹{item.price}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                        :
+                        JSON.parse(order.items).map((item, itemIndex) => (
+                          <div key={itemIndex} className="order-item">
+                            <img src={item.image} alt={item.name} className="item-image" />
+                            <div className="item-details">
+                              <h4>{item.name}</h4>
+                              <div className="item-meta">
+                                <span>Quantity: {item.quantity}</span>
+                                <span>Price: ₹{item.price}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
 
-        {/* Display Generated Coupon Details */}
-        {generatedCoupon && (
-          <div className="coupon-details">
-            <h3>Coupon Code: {generatedCoupon.code}</h3>
-            <p>Discount: {generatedCoupon.discount}</p>
-            <p>Expires on: {generatedCoupon.expiry}</p>
-            <p>School: {user.full_name}</p>
+
+                    <div className="order-footer">
+                      <div className="order-total">
+                        <span>Total:</span>
+                        <span className="total-amount">₹{order.total}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  );
+        );
 
-        case 'total Student':
-  return (
-    <div className="content-area">
-      <h2><FaChildReaching className="icon" /> Total Student</h2>
-      <div className="Student-table">
-        <div className="table-header">
-          <span className="table-column">Student Name</span>
-          <span className="table-column">Purchase Amount</span>
-          <span className="table-column">reward</span>
-        </div>
-        {[
-          { Student: "mohit", purchaseAmount: "₹50,000", reward: "₹2,500" },
-          { Student: "prerna", purchaseAmount: "₹70,000", reward: "₹3,500" },
-          { Student: "lakshita", purchaseAmount: "₹60,000", reward: "₹3,000" },
-          { Student: "sourabh", purchaseAmount: "₹80,000", reward: "₹4,000" },
-          
-        ].map((data, index) => (
-          <div key={index} className="table-row">
-            <span className="table-column">{data.Student}</span>
-            <span className="table-column">{data.purchaseAmount}</span>
-            <span className="table-column">{data.reward}</span>
+
+
+      case 'total Student':
+        return (
+          <div className="content-area">
+            <h2><FaChildReaching className="icon" /> Total Student</h2>
+            <div className="Student-table">
+              <div className="table-header">
+                <span className="table-column">Student Name</span>
+                <span className="table-column">Purchase Amount</span>
+                <span className="table-column">reward</span>
+              </div>
+              {[
+                { Student: "mohit", purchaseAmount: "₹50,000", reward: "₹2,500" },
+                { Student: "prerna", purchaseAmount: "₹70,000", reward: "₹3,500" },
+                { Student: "lakshita", purchaseAmount: "₹60,000", reward: "₹3,000" },
+                { Student: "sourabh", purchaseAmount: "₹80,000", reward: "₹4,000" },
+
+              ].map((data, index) => (
+                <div key={index} className="table-row">
+                  <span className="table-column">{data.Student}</span>
+                  <span className="table-column">{data.purchaseAmount}</span>
+                  <span className="table-column">{data.reward}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  );
+        );
 
-          
+
       default:
         return <div className="content-area">Select a tab to view content.</div>;
     }
@@ -256,8 +335,8 @@ const SchoolProfile = () => {
     const fetchSchoolDetails = async () => {
       const user = JSON.parse(localStorage.getItem('user'));
       if (!user) return;
-      
-  
+
+
       // try {
       //   const response = await fetch(`http://localhost:5000/api/school-details/${user.id}`);
       //   const data = await response.json();
@@ -265,12 +344,12 @@ const SchoolProfile = () => {
       // } catch (err) {
       //   console.error("Error fetching school name:", err);
       // }
-      setUser({ full_name: user.schoolName,role:user.role} );
+      setUser({ full_name: user.schoolName, role: user.role });
 
     };
     fetchSchoolDetails();
   }, []);
-  
+
 
   return (
     <div className="profile-container">
@@ -283,19 +362,19 @@ const SchoolProfile = () => {
             <span className="user-status">sourabhprajapati920@gmail.com</span>
           </div>
         </div> */}
-         {user.role === 'school' && (
-        <div className="user-info">
-          <h1>School Dashboard</h1>
-          <div className="user-details">
-          <span className="user-name">{user.full_name}</span>
-          {/* <span className="user-status">{user.email}</span> */}
-        </div>
-        </div>
-      )}
+        {user.role === 'school' && (
+          <div className="user-info">
+            <h1>School Dashboard</h1>
+            <div className="user-details">
+              <span className="user-name">{user.full_name}</span>
+              {/* <span className="user-status">{user.email}</span> */}
+            </div>
+          </div>
+        )}
       </header>
       <div className="profile-content">
         <nav className="sidebar">
-        <button
+          <button
             className={`nav-button ${activeTab === 'redeemPoints' ? 'active' : ''}`}
             onClick={() => setActiveTab('redeemPoints')}
           >
@@ -313,7 +392,7 @@ const SchoolProfile = () => {
             className={`nav-button ${activeTab === 'My order ' ? 'active' : ''}`}
             onClick={() => setActiveTab('My order')}
           >
-            <FaChildReaching size={24} />
+            <CgShoppingCart size={24} />
             <span>My order</span>
           </button>
 
@@ -324,13 +403,7 @@ const SchoolProfile = () => {
             <Ticket size={24} />
             <span>Coupons</span>
           </button>
-          <button
-            className={`nav-button ${activeTab === 'Genrate coupons' ? 'active' : ''}`}
-            onClick={() => setActiveTab('Genrate coupons')}
-          >
-            <Ticket size={24} />
-            <span>Genrate Coupons</span>
-          </button>
+
 
 
 
@@ -348,8 +421,8 @@ const SchoolProfile = () => {
             <MapPin size={24} />
             <span>Address Book</span>
           </button>
-        
-         
+
+
           <button
             className={`nav-button ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
@@ -364,7 +437,7 @@ const SchoolProfile = () => {
             <Bell size={24} />
             <span>Manage Notifications</span>
           </button>
-          
+
         </nav>
         <main className="main-content">
           {renderContent()}

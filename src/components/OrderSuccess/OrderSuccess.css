@@ -1,0 +1,23 @@
+.order-success-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .order-success-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .order-success-box h2 {
+    color: green;
+  }
+  
+  .order-success-box p {
+    color: #555;
+  }

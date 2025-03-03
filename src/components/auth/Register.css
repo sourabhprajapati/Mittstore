@@ -127,7 +127,7 @@
     font-size: 0.875rem;
     margin-top: 0.5rem;
   }
-  .check11 {
+  .check112 {
     display: flex;
     justify-content: flex-start;
     font-size: 0.95rem;
@@ -135,7 +135,7 @@
     color: #4a5568;
     margin-bottom: 0.5rem;
   }
-  .check11 {
+  .check112 {
     padding: 0.5rem 0.5rem !important;
     border: 1px solid #e2e8f0;
     border-radius: 0.5rem;
@@ -146,13 +146,13 @@
     margin: 5px 5px;
   }
   
-  .check11:focus {
+  .check112:focus {
     outline: none;
     border-color: #4299e1;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
   }
   
-  .check12[type="radio"] {
+  .check122[type="radio"] {
     width: auto;
     margin-right: 0.5rem;
   }
