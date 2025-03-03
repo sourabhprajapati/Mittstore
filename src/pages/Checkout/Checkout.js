@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Checkout.css";
 import Header from "../../components/header/Header";
 import { useCart } from "../../components/context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 
 const Checkout = () => {
-  const { cartItems } = useCart(); // Fetch cart items from context
+  const { cartItems } = useCart();
+  const { user } = useAuth();  // Changed from currentUser to user
   const [coupon, setCoupon] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [additionalDiscount, setAdditionalDiscount] = useState(0);
+  const [couponError, setCouponError] = useState("");
+  const [couponSuccess, setCouponSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,21 +25,77 @@ const Checkout = () => {
   });
   const [errors, setErrors] = useState({});
 
+  // Prefill form with user data if available
+  useEffect(() => {
+    if (user) {  // Changed from currentUser to user
+      setFormData(prevData => ({
+        ...prevData,
+        name: user.firstName ? `${user.firstName} ${user.lastName || ''}` : prevData.name,  // Changed from currentUser to user
+        email: user.email || prevData.email,  // Changed from currentUser to user
+        phone: user.mobile || prevData.phone,  // Changed from currentUser to user
+      }));
+    }
+  }, [user]);  // Changed from currentUser to user
+
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 0), 0);
-  const shipping = cartItems.length > 0 ? 40 : 0; // Apply shipping only if cart is not empty
+  const shipping = cartItems.length > 0 ? 40 : 0;
   const tax = subtotal * 0.1; // 10% GST
   const couponDiscount = (subtotal * additionalDiscount) / 100;
   const total = subtotal + shipping + tax - couponDiscount;
 
   const applyCoupon = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/api/validate-coupon", { code: coupon });
-      setAdditionalDiscount(response.data.discount_percentage);
-      setCouponApplied(true);
-    } catch (error) {
-      alert(error.response?.data?.error || "Failed to validate coupon");
+    console.log("User from AuthContext:", user); 
+    setCouponError("");
+    setCouponSuccess("");
+
+    if (!coupon.trim()) {
+        setCouponError("Please enter a coupon code");
+        return;
     }
+
+    if (!user) {
+        setCouponError("You must be logged in to apply a coupon");
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        console.log("Sending request with payload:", {
+            code: coupon,
+            userId: user.id,
+            userType: user.role
+        });
+
+        const response = await axios.post("http://localhost:5000/api/coupons/validate", {
+            code: coupon,
+            userId: user.id,
+            userType: user.role
+        });
+
+        console.log("Response received:", response.data);
+
+        setAdditionalDiscount(response.data.discount_percentage);
+        setCouponApplied(true);
+        setCouponSuccess(`Coupon applied! You received ${response.data.discount_percentage}% discount.`);
+    } catch (error) {
+        console.error("Coupon validation error:", error.response?.data || error.message);
+        setCouponError(error.response?.data?.error || "Failed to validate coupon");
+        setCouponApplied(false);
+        setAdditionalDiscount(0);
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+
+  const removeCoupon = () => {
+    setCouponApplied(false);
+    setAdditionalDiscount(0);
+    setCouponSuccess("");
+    setCouponError("");
   };
 
   const handleInputChange = (e) => {
@@ -68,7 +129,13 @@ const Checkout = () => {
   const handleCheckout = async () => {
     if (!validateForm()) return;
 
+    if (!user) {  // Changed from currentUser to user
+      alert("Please log in to complete your purchase");
+      return;
+    }
+
     const orderData = {
+      userId: user.id,  // Changed from currentUser to user
       fullName: formData.name,
       email: formData.email,
       address: formData.address,
@@ -80,15 +147,21 @@ const Checkout = () => {
       couponCode: couponApplied ? coupon : null,
     };
 
+    setLoading(true);
+
     try {
-      const response = await axios.post("http://localhost:5000/api/orders", orderData);
+      const response = await axios.post("http://localhost:5000/api/checkout/process", orderData);
       alert(response.data.message);
+      // Reset form after successful checkout
       setFormData({ name: "", email: "", address: "", city: "", state: "", pincode: "", phone: "" });
       setCoupon("");
       setCouponApplied(false);
       setAdditionalDiscount(0);
+      // Clear cart functionality would typically be called here
     } catch (error) {
-      alert("Failed to process order");
+      alert(error.response?.data?.error || "Failed to process order");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,13 +174,13 @@ const Checkout = () => {
             <h2 className="section-title">Shipping Information</h2>
             {Object.entries(formData).map(([key, value]) => (
               <div className="form-group" key={key}>
-                <label htmlFor={key}>{key.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
+                <label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}</label>
                 <input
                   type={key === "email" ? "email" : key === "phone" || key === "pincode" ? "number" : "text"}
                   id={key}
                   value={value}
                   onChange={handleInputChange}
-                  placeholder={`${key}...`}
+                  placeholder={`Enter ${key}...`}
                   required
                 />
                 {errors[key] && <span className="error-message">{errors[key]}</span>}
@@ -122,11 +195,6 @@ const Checkout = () => {
                 {cartItems.map((item) => (
                   <div key={item.id} className="summary-item">
                     <div className="product-details">
-                      {/* <img
-                        src={item.image || "https://via.placeholder.com/150"}
-                        alt={item.name}
-                        className="product-image"
-                      /> */}
                       <div>
                         <h3>{item.name}</h3>
                         <p>Quantity: {item.quantity}</p>
@@ -137,18 +205,28 @@ const Checkout = () => {
                 ))}
 
                 <div className="form-group">
-                  <label htmlFor="coupon">Coupon</label>
-                  <input
-                    type="text"
-                    id="coupon"
-                    placeholder="Enter coupon..."
-                    value={coupon}
-                    onChange={(e) => setCoupon(e.target.value)}
-                    disabled={couponApplied}
-                  />
-                  <button onClick={applyCoupon} disabled={couponApplied} className={`apply-button ${couponApplied ? "disabled" : ""}`}>
-                    {couponApplied ? "Coupon Applied" : "Apply Coupon"}
-                  </button>
+                  <label htmlFor="coupon">Coupon Code</label>
+                  <div className="coupon-input-container">
+                    <input
+                      type="text"
+                      id="coupon"
+                      placeholder="Enter your coupon code"
+                      value={coupon}
+                      onChange={(e) => setCoupon(e.target.value)}
+                      disabled={couponApplied || loading}
+                      className={couponApplied ? "input-success" : ""}
+                    />
+                    <button
+                      onClick={couponApplied ? removeCoupon : applyCoupon}
+                      disabled={loading}
+                      className={`coupon-button ${couponApplied ? "remove-coupon" : ""}`}
+                    >
+                      {loading ? "Processing..." : couponApplied ? "Remove" : "Apply"}
+                    </button>
+                  </div>
+                  {couponError && <span className="error-message">{couponError}</span>}
+                  {couponSuccess && <span className="success-message">{couponSuccess}</span>}
+                  {!user && <p className="info-message">Login required to use coupons</p>}  {/* Changed from currentUser to user */}
                 </div>
 
                 <div className="total-section">
@@ -165,23 +243,27 @@ const Checkout = () => {
                     <span className="price">₹{tax.toFixed(2)}</span>
                   </div>
                   {couponApplied && (
-                    <div className="summary-item">
+                    <div className="summary-item discount-row">
                       <span>Coupon Discount</span>
-                      <span className="price">-₹{couponDiscount.toFixed(2)}</span>
+                      <span className="price discount">-₹{couponDiscount.toFixed(2)}</span>
                     </div>
                   )}
-                  <div className="summary-item">
+                  <div className="summary-item total-row">
                     <strong>Total</strong>
                     <strong className="total-price">₹{total.toFixed(2)}</strong>
                   </div>
                 </div>
 
-                <button className="checkout-button" onClick={handleCheckout}>
-                  Complete Purchase
+                <button
+                  className="checkout-button"
+                  onClick={handleCheckout}
+                  disabled={loading || cartItems.length === 0}
+                >
+                  {loading ? "Processing..." : "Complete Purchase"}
                 </button>
               </>
             ) : (
-              <p>Your cart is empty.</p>
+              <p className="empty-cart-message">Your cart is empty.</p>
             )}
           </div>
         </div>
