@@ -8,15 +8,11 @@ import { useLocation } from 'react-router-dom';
 import { BiSolidSchool } from "react-icons/bi";
 import { CgShoppingCart } from "react-icons/cg";
 const SeProfile = () => {
-<<<<<<< HEAD
-  const [activeTab, setActiveTab] = useState('Total School');
-=======
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tabFromUrl = queryParams.get('tab');
 
   const [activeTab, setActiveTab] = useState(tabFromUrl || 'Total School');
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
   const [schools, setSchools] = useState([]);
   const [schoolsWithCoupons, setSchoolsWithCoupons] = useState([]);
 
@@ -35,11 +31,6 @@ const SeProfile = () => {
 
   const [selectedSchool, setSelectedSchool] = useState('');
   const [generatedCoupon, setGeneratedCoupon] = useState(null); // state for the generated coupon
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
   // Check if school already has an active coupon
   const schoolHasCoupon = (schoolId) => {
     return schoolsWithCoupons.some(coupon => coupon.school_id === parseInt(schoolId));
@@ -48,119 +39,12 @@ const SeProfile = () => {
   // Function to generate a random coupon code
   const generateCoupon = async () => {
     if (!selectedSchool) {
-<<<<<<< HEAD
-        alert("Please select a school first.");
-        return;
-=======
       alert("Please select a school first.");
       return;
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
     }
 
     // Check if this school already has a coupon
     if (schoolHasCoupon(selectedSchool)) {
-<<<<<<< HEAD
-        alert("A coupon has already been generated for this school. Please select a different school.");
-        return;
-    }
-
-    try {
-        const response = await fetch("http://localhost:5000/api/coupons", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                schoolId: selectedSchool,
-                seEmployeeId: user.userId,  // SE ID is automatically passed
-            }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            const selectedSchoolName = schools.find(school => school.id.toString() === selectedSchool.toString())?.school_name || '';
-            
-            setGeneratedCoupon({
-              schoolCode: data.schoolCouponCode,
-              studentCode: data.studentCouponCode,
-              schoolDiscount: "10% off",
-              studentDiscount: "15% off",
-              school_id: parseInt(selectedSchool),
-              school_name: selectedSchoolName,
-              studentCount: data.studentCount
-            });
-            
-            // Update the list of schools with coupons
-            setSchoolsWithCoupons([...schoolsWithCoupons, {
-                school_id: parseInt(selectedSchool),
-                code: data.schoolCouponCode,
-              coupon_type: 'school'
-          }, {
-              school_id: parseInt(selectedSchool),
-              code: data.studentCouponCode,
-              coupon_type: 'student'
-          }]);
-          
-            alert("School and student coupons generated successfully!");
-          
-            
-            // Refresh the list of coupons
-            fetchActiveCoupons();
-        } else {
-            alert("Failed to generate coupon: " + data.error);
-        }
-    } catch (error) {
-        console.error("Error generating coupon:", error);
-        alert("An error occurred.");
-    }
-};
-
-  
-const sendCouponMail = async () => {
-  if (!generatedCoupon) {
-    alert("Please generate a coupon first.");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:5000/api/coupons/send-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        couponCode: generatedCoupon.schoolCode,
-        studentCouponCode: generatedCoupon.studentCode,
-        schoolId: selectedSchool,
-        seEmployeeId: user.userId,
-        discountPercentage: 10,
-        validFrom: new Date().toISOString().split('T')[0],
-        validUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0], // 1 year validity
-      }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      alert("Emails sent successfully!");
-    } else {
-      alert("Failed to send emails: " + data.error);
-    }
-  } catch (error) {
-    console.error("Error sending emails:", error);
-    alert("An error occurred.");
-  }
-};
-  
-  // Function to fetch active coupons for all schools assigned to this SE
-  const fetchActiveCoupons = async () => {
-    if (!user.userId) return;
-    
-    try {
-      const promises = schools.map(school => 
-        fetch(`http://localhost:5000/api/coupons/school/${school.id}`)
-          .then(res => res.json())
-      );
-      
-      const results = await Promise.all(promises);
-      const allCoupons = results.flat();
-      
-=======
       alert("A coupon has already been generated for this school. Please select a different school.");
       return;
     }
@@ -186,7 +70,6 @@ const sendCouponMail = async () => {
           studentDiscount: "15% off",
           school_id: parseInt(selectedSchool),
           school_name: selectedSchoolName,
-          studentCount: data.studentCount
         });
 
         // Update the list of schools with coupons
@@ -261,7 +144,6 @@ const sendCouponMail = async () => {
       const results = await Promise.all(promises);
       const allCoupons = results.flat();
 
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
       const detailedCoupons = allCoupons.map(coupon => {
         // Make sure we have all the fields we need
         return {
@@ -271,11 +153,6 @@ const sendCouponMail = async () => {
           max_uses: coupon.max_uses || 500
         };
       });
-<<<<<<< HEAD
-      
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
       setSchoolsWithCoupons(detailedCoupons);
     } catch (error) {
       console.error("Error fetching active coupons:", error);
@@ -290,15 +167,9 @@ const sendCouponMail = async () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code }),
       });
-<<<<<<< HEAD
-      
-      const data = await response.json();
-      
-=======
 
       const data = await response.json();
 
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
       if (response.ok && data.valid) {
         // Check if the coupon is for the correct school
         if (data.school_id.toString() === schoolId.toString()) {
@@ -352,21 +223,11 @@ const sendCouponMail = async () => {
                 {schoolsWithCoupons.map((coupon, index) => {
                   const school = schools.find(s => s.id === coupon.school_id);
                   const schoolName = school ? school.school_name : "Unknown School";
-<<<<<<< HEAD
-                  
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                   // Determine coupon styling and details based on type
                   const isStudent = coupon.coupon_type === 'student';
                   const couponClass = isStudent ? "coupon-item coupon-green" : "coupon-item coupon-blue";
                   const discount = isStudent ? "15% off" : "10% off";
                   const label = isStudent ? "Student Coupon" : "School Coupon";
-<<<<<<< HEAD
-                  
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                   return (
                     <div key={index} className={couponClass}>
                       <span className="coupon-label">{label}</span>
@@ -396,11 +257,6 @@ const sendCouponMail = async () => {
                   <label htmlFor="user-id">SE ID:</label>
                   <input type="text" id="user-id" value={user.userId} disabled />
                 </div>
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                 <div className="school-select-box">
                   <label htmlFor="school">Select School:</label>
                   <select id="school" value={selectedSchool} onChange={(e) => setSelectedSchool(e.target.value)}>
@@ -415,29 +271,14 @@ const sendCouponMail = async () => {
                     })}
                   </select>
                 </div>
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                 <div className="button-group">
                   <button className="btn-primary" onClick={generateCoupon} disabled={!selectedSchool || schoolHasCoupon(selectedSchool)}>
                     Generate Coupons
                   </button>
-<<<<<<< HEAD
-                  
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                   <button className="btn-secondary" onClick={sendCouponMail} disabled={!generatedCoupon}>
                     Send Mail
                   </button>
                 </div>
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                 {generatedCoupon && (
                   <div className="coupon-details">
                     <h3>School Coupon: {generatedCoupon.schoolCode}</h3>
@@ -452,15 +293,9 @@ const sendCouponMail = async () => {
             </div>
           );
         };
-<<<<<<< HEAD
-      
-        case 'Genrate coupons':
-          return renderGenerateCouponsTab();
-=======
 
       case 'Genrate coupons':
         return renderGenerateCouponsTab();
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
 
       case 'verify-coupon':
         return (
@@ -471,11 +306,7 @@ const sendCouponMail = async () => {
                 <label htmlFor="coupon-code">Enter Coupon Code:</label>
                 <input type="text" id="coupon-code" placeholder="e.g., COUPON-ABC123" />
               </div>
-<<<<<<< HEAD
               
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
               <div className="school-select-box">
                 <label htmlFor="verify-school">Select School:</label>
                 <select id="verify-school">
@@ -485,11 +316,7 @@ const sendCouponMail = async () => {
                   ))}
                 </select>
               </div>
-<<<<<<< HEAD
               
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
               <button className="btn-primary" onClick={() => {
                 const code = document.getElementById('coupon-code').value;
                 const schoolId = document.getElementById('verify-school').value;
@@ -497,11 +324,7 @@ const sendCouponMail = async () => {
                   alert("Please enter a coupon code and select a school");
                   return;
                 }
-<<<<<<< HEAD
                 
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                 verifyCoupon(code, schoolId).then(result => {
                   alert(result.message);
                 });
@@ -512,83 +335,6 @@ const sendCouponMail = async () => {
           </div>
         );
 
-<<<<<<< HEAD
-        case 'Total School':
-          return (
-            <div className="content-area">
-              <h2><BiSolidSchool className="icon" /> Total School</h2>
-              <div className="school-table">
-                <div className="table-header">
-                  <span className="table-column">School Name</span>
-                  <span className="table-column">School Coupon</span>
-                  <span className="table-column">Student Coupon</span>
-                  <span className="table-column">Generation Date</span>
-                  <span className="table-column">Uses</span>
-                </div>
-                {schools.map((school, index) => {
-                  const schoolCoupon = schoolsWithCoupons.find(
-                    coupon => coupon.school_id === school.id && coupon.coupon_type === 'school'
-                  );
-                  const studentCoupon = schoolsWithCoupons.find(
-                    coupon => coupon.school_id === school.id && coupon.coupon_type === 'student'
-                  );
-                  return (
-                    <div key={index} className="table-row">
-                      <span className="table-column">{school.school_name}</span>
-                      <span className="table-column">
-                        {schoolCoupon ? 
-                          <span style={{ color: 'green' }}>{schoolCoupon.code}</span> : 
-                          <span style={{ color: 'orange' }}>No Coupon</span>
-                        }
-                      </span>
-                      <span className="table-column">
-                        {studentCoupon ? 
-                          <span style={{ color: 'green' }}>{studentCoupon.code}</span> : 
-                          <span style={{ color: 'orange' }}>No Coupon</span>
-                        }
-                      </span>
-                      <span className="table-column">
-                        {schoolCoupon ? 
-                          new Date(schoolCoupon.valid_from || schoolCoupon.created_at).toLocaleDateString() : 
-                          '-'
-                        }
-                      </span>
-                      <span className="table-column">
-                        {schoolCoupon ? 
-                          `${schoolCoupon.current_uses || 0}/${schoolCoupon.max_uses || 1}` : 
-                          '-'
-                        }
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        case 'redeemPoints':
-                return (
-                  <div className="content-area">
-                    <h2><Gift className="icon" /> Redeem Points</h2>
-                    <div className="points-info">
-                      <div className="points-balance">
-                        <h3>Current Balance</h3>
-                        <p className="points">1,500 pts</p>
-                        <p className="value10">Value</p>
-                        <p className="value1">₹15.00</p>
-                      </div>
-                      {/* <div className="points-value">
-                        <h3>Value</h3>
-                        <p className="value">₹15.00</p>
-                      </div> */}
-                    </div>
-                    <div className="redeem-options">
-                      {/* <h3>Redeem for:</h3> */}
-                      <div className="redeem-grid">
-                        <button className="btn-primary"><ShoppingBag size={18} /> Redeem for Coupon</button>
-                        {/* <button className="btn-primary"><ShoppingBag size={18} /> ₹10 Off Coupon (1000 pts)</button> */}
-                        <button className="btn-primary"><ShoppingBag size={18} /> Redeem for Cash </button>
-                        {/* <button className="btn-primary"><ShoppingBag size={18} /> ₹20 Off Coupon (2000 pts)</button> */}
-=======
       case 'Total School':
         return (
           <div className="content-area">
@@ -745,7 +491,6 @@ const sendCouponMail = async () => {
                       <div className="order-total">
                         <span>Total:</span>
                         <span className="total-amount">₹{order.total}</span>
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
                       </div>
                     </div>
                   </div>
@@ -823,25 +568,10 @@ const sendCouponMail = async () => {
             role: "se",
             userId: data.seDetails.employee_id,  // Automatically set SE ID
           });
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
           // Fetch schools first
           const schoolsResponse = await fetch(`http://localhost:5000/api/schools-by-se/${data.seDetails.employee_id}`);
           const schoolsData = await schoolsResponse.json();
           setSchools(schoolsData);
-<<<<<<< HEAD
-          
-          // After we have schools data, fetch coupons for each school
-          if (schoolsData && schoolsData.length > 0) {
-            const couponPromises = schoolsData.map(school => 
-              fetch(`http://localhost:5000/api/coupons/school/${school.id}`)
-                .then(res => res.json())
-            );
-            
-=======
 
           // After we have schools data, fetch coupons for each school
           if (schoolsData && schoolsData.length > 0) {
@@ -850,7 +580,6 @@ const sendCouponMail = async () => {
                 .then(res => res.json())
             );
 
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
             const couponResults = await Promise.all(couponPromises);
             const allCoupons = couponResults.flat();
             setSchoolsWithCoupons(allCoupons);
@@ -865,11 +594,6 @@ const sendCouponMail = async () => {
 
     fetchUserData();
   }, []); // Only run once on component mount
-<<<<<<< HEAD
-
-  
-  
-=======
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -891,7 +615,6 @@ const sendCouponMail = async () => {
 
 
 
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
   return (
     <div className="profile-container">
       <header className="profile-header">
@@ -920,22 +643,6 @@ const sendCouponMail = async () => {
             <Ticket size={24} />
             <span>Generate Coupons</span>
           </button>
-<<<<<<< HEAD
-          {/* <button
-            className={`nav-button ${activeTab === 'coupons' ? 'active' : ''}`}
-            onClick={() => setActiveTab('coupons')}
-          >
-            <Ticket size={24} />
-            <span>Active Coupons</span>
-          </button> */}
-          {/* <button
-            className={`nav-button ${activeTab === 'verify-coupon' ? 'active' : ''}`}
-            onClick={() => setActiveTab('verify-coupon')}
-          >
-            <Ticket size={24} />
-            <span>Verify Coupon</span>
-          </button> */}
-=======
 
            <button
                       className={`nav-button ${activeTab === 'My order ' ? 'active' : ''}`}
@@ -945,7 +652,6 @@ const sendCouponMail = async () => {
                       <span>My order</span>
                     </button>
 
->>>>>>> 14872b0f182476c460471ecfefd66f42a3015b1a
           <button
             className={`nav-button ${activeTab === 'redeemPoints' ? 'active' : ''}`}
             onClick={() => setActiveTab('redeemPoints')}

@@ -257,7 +257,7 @@ const SchoolProfile = () => {
                       {Array.isArray(order.items) ?
                         order.items.map((item, itemIndex) => (
                           <div key={itemIndex} className="order-item">
-                            <img src={item.image} alt={item.name} className="item-image" />
+                            <img src={item.images[itemIndex]} alt={item.name} className="item-image" />
                             <div className="item-details">
                               <h4>{item.name}</h4>
                               <div className="item-meta">
