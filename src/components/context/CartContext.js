@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
@@ -12,21 +13,26 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (product) => {
     const existingItem = cartItems.find(item => item.id === product.id);
+    
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
       cartItems.push({ 
         ...product, 
         quantity: 1, 
-        image: product.image || "https://via.placeholder.com/150" // Default image if missing
+        images: typeof product.images === "string" ? product.images : (product.images?.[0] || "/placeholder.jpg")
       });
     }
-    console.log(JSON.parse(localStorage.getItem("cartItems")));
-
+  
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
     setCartItems([...cartItems]);
-    return true;
+  
+    return true; // ✅ Ensure success response
   };
+  
+  
+  
+  
   
   const updateQuantity = (productId, change) => {
     const updatedCart = cartItems.map(item =>

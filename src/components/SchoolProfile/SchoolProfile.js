@@ -1,14 +1,11 @@
-import React from 'react'
-import { useState, useEffect } from 'react';
-import "./SchoolProfile.css"
-import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap, CheckCircle, Package } from 'lucide-react';
-import supple from "../../assets/supplies.jpg"
-import { Link } from "react-router-dom"
+import React, { useState, useEffect } from 'react';
+import "./SchoolProfile.css";
+import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
+import { Link } from "react-router-dom";
 import { FaChildReaching } from "react-icons/fa6";
 import { CgShoppingCart } from "react-icons/cg";
 import { useLocation } from 'react-router-dom';
-
-
+import axios from 'axios';
 
 const SchoolProfile = () => {
   const location = useLocation();
@@ -16,60 +13,142 @@ const SchoolProfile = () => {
   const tabFromUrl = queryParams.get('tab');
 
   const [activeTab, setActiveTab] = useState(tabFromUrl || 'redeemPoints');
-  const [user, setUser] = useState({
-    full_name: '',
-    role: ''
-
-
-  });
+  const [user, setUser] = useState({ full_name: '', role: '' });
   const [orders, setOrders] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [wishlistError, setWishlistError] = useState(null);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState(null);
+  // Add formData state for settings
+  const [formData, setFormData] = useState({
+    schoolName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const generateSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .substring(0, 200);
+  };
+
+  const handleRemoveFromWishlist = async (productId) => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (!storedUser || !storedUser.id) return;
+
+    try {
+      await axios.post('http://localhost:5000/api/wishlist/remove', {
+        userId: storedUser.id,
+        productId: productId
+      });
+      setWishlist(prevWishlist => prevWishlist.filter(item => item.id !== productId));
+      setWishlistError(null);
+    } catch (error) {
+      console.error('Error removing from wishlist:', error);
+      setWishlistError('Failed to remove item from wishlist. Please try again.');
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user.email) return;
-  
+    const fetchUserDetailsAndData = async () => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (!storedUser || !storedUser.email) return;
+
+      setUser({ full_name: storedUser.schoolName, role: storedUser.role });
+      // Populate formData with initial values
+      setFormData({
+        schoolName: storedUser.schoolName || '',
+        email: storedUser.email || '',
+        password: '',
+        confirmPassword: '',
+      });
+
+      setOrdersLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/orders/email/${user.email}`);
-        const data = await response.json();
-        setOrders(data);
+        const ordersResponse = await fetch(`http://localhost:5000/api/orders/email/${storedUser.email}`);
+        const ordersData = await ordersResponse.json();
+        setOrders(ordersData);
+        setOrdersError(null);
       } catch (error) {
         console.error("Error fetching orders:", error);
+        setOrdersError('Failed to load orders. Please try again later.');
+      } finally {
+        setOrdersLoading(false);
+      }
+
+      setWishlistLoading(true);
+      try {
+        const wishlistResponse = await axios.get(`http://localhost:5000/api/wishlist/${storedUser.id}`);
+        const formattedWishlist = wishlistResponse.data.map(item => ({
+          ...item,
+          price: typeof item.price === 'string' ? parseFloat(item.price) : item.price
+        }));
+        setWishlist(formattedWishlist);
+        setWishlistError(null);
+      } catch (error) {
+        console.error('Error fetching wishlist:', error);
+        setWishlistError('Failed to load wishlist. Please try again later.');
+      } finally {
+        setWishlistLoading(false);
       }
     };
-  
-    fetchOrders();
+
+    fetchUserDetailsAndData();
   }, []);
-  
 
   useEffect(() => {
     if (tabFromUrl) {
       setActiveTab(tabFromUrl);
     }
   }, [tabFromUrl]);
-  // const [orders] = useState([
-  //   {
-  //     id: 'ORD-1234',
-  //     date: '2023-07-20',
-  //     status: 'Delivered',
-  //     items: [
-  //       { name: 'Textbooks', price: 1200, quantity: 5, image: supple },
-  //       { name: 'Stationery Kit', price: 299, quantity: 2, image: supple }
-  //     ],
-  //     total: 1200 * 5 + 299 * 2
-  //   },
-  //   {
-  //     id: 'ORD-1235',
-  //     date: '2023-07-18',
-  //     status: 'Processing',
-  //     items: [
-  //       { name: 'Art Supplies', price: 599, quantity: 3, image: supple }
-  //     ],
-  //     total: 599 * 3
-  //   }
-  // ]);
 
+  // Add handleSubmit function for settings form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
 
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/${storedUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          schoolName: formData.schoolName,
+          email: formData.email,
+          password: formData.password || undefined,
+        }),
+      });
+
+      if (response.ok) {
+        alert('Profile updated successfully!');
+        const updatedUser = await response.json();
+        setUser({
+          ...user,
+          full_name: formData.schoolName,
+          email: formData.email,
+        });
+        // Update localStorage if needed
+        localStorage.setItem('user', JSON.stringify({
+          ...storedUser,
+          schoolName: formData.schoolName,
+          email: formData.email
+        }));
+      } else {
+        alert('Failed to update profile.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    }
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -77,24 +156,49 @@ const SchoolProfile = () => {
         return (
           <div className="content-area">
             <h2><Heart className="icon" /> My Wishlist</h2>
-            <div className="wishlist-grid">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="wishlist-item">
-                  <div className="wishlist-image">
-                    <img src={supple} alt={`Wishlist Item ${item}`} />
-                    <span className="wishlist-badge">New</span>
-                  </div>
-                  <h3>Awesome Product {item}</h3>
-                  <p className="price">₹99.99</p>
-                  <div className="rating">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={16} className={i < 4 ? 'filled' : ''} />
-                    ))}
-                  </div>
-                  <Link to='/cart'><button className="btn-primary">Add to Cart</button></Link>
-                </div>
-              ))}
-            </div>
+            {wishlistLoading ? (
+              <p>Loading wishlist...</p>
+            ) : wishlistError ? (
+              <p>{wishlistError}</p>
+            ) : (
+              <div className="wishlist-grid">
+                {wishlist.length === 0 ? (
+                  <p>No items in wishlist</p>
+                ) : (
+                  wishlist.map((item) => {
+                    const firstImage = Array.isArray(item.images) && item.images.length > 0
+                      ? item.images[0].replace(/\\/g, "/")
+                      : null;
+                    const productSlug = item.slug || generateSlug(item.name || 'unnamed-item');
+
+                    return (
+                      <div className="wishlist-item" key={item.id}>
+                        <Link to={`/product/${encodeURIComponent(productSlug)}`}>
+                          <div className="wishlist-image">
+                            <img
+                              src={firstImage ? `http://localhost:5000/${firstImage}` : '/placeholder.jpg'}
+                              alt={item.name || 'Wishlist Item'}
+                              onError={(e) => e.target.src = '/placeholder.jpg'}
+                            />
+                          </div>
+                          <h3>{item.name || 'Unnamed Item'}</h3>
+                        </Link>
+                        <p className="price">₹{item.price?.toFixed(2) || '0.00'}</p>
+                        <button
+                          className="btn-secondary remove-btn"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleRemoveFromWishlist(item.id);
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
           </div>
         );
       case 'addressBook':
@@ -171,22 +275,46 @@ const SchoolProfile = () => {
         return (
           <div className="content-area">
             <h2><Settings className="icon" /> Account Settings</h2>
-            <form className="settings-form">
+            <form className="settings-form" onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input type="text" id="name" name="name" defaultValue="Sourabh" />
+                <label htmlFor="schoolName">School Name</label>
+                <input
+                  type="text"
+                  id="schoolName"
+                  name="schoolName"
+                  value={formData.schoolName}
+                  onChange={(e) => setFormData({ ...formData, schoolName: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" defaultValue="Sourabh@example.com" />
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="password">New Password</label>
-                <input type="password" id="password" name="password" />
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="confirmPassword">Confirm New Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" />
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                />
               </div>
               <button type="submit" className="btn-primary">Save Changes</button>
             </form>
@@ -252,7 +380,6 @@ const SchoolProfile = () => {
                         <span className="order-date">{order.createdAt}</span>
                       </div>
                     </div>
-
                     <div className="order-items">
                       {Array.isArray(order.items) ?
                         order.items.map((item, itemIndex) => (
@@ -282,8 +409,6 @@ const SchoolProfile = () => {
                         ))
                       }
                     </div>
-
-
                     <div className="order-footer">
                       <div className="order-total">
                         <span>Total:</span>
@@ -296,9 +421,6 @@ const SchoolProfile = () => {
             </div>
           </div>
         );
-
-
-
       case 'total Student':
         return (
           <div className="content-area">
@@ -307,14 +429,13 @@ const SchoolProfile = () => {
               <div className="table-header">
                 <span className="table-column">Student Name</span>
                 <span className="table-column">Purchase Amount</span>
-                <span className="table-column">reward</span>
+                <span className="table-column">Reward</span>
               </div>
               {[
                 { Student: "mohit", purchaseAmount: "₹50,000", reward: "₹2,500" },
                 { Student: "prerna", purchaseAmount: "₹70,000", reward: "₹3,500" },
                 { Student: "lakshita", purchaseAmount: "₹60,000", reward: "₹3,000" },
                 { Student: "sourabh", purchaseAmount: "₹80,000", reward: "₹4,000" },
-
               ].map((data, index) => (
                 <div key={index} className="table-row">
                   <span className="table-column">{data.Student}</span>
@@ -325,49 +446,19 @@ const SchoolProfile = () => {
             </div>
           </div>
         );
-
-
       default:
         return <div className="content-area">Select a tab to view content.</div>;
     }
   };
-  useEffect(() => {
-    const fetchSchoolDetails = async () => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user) return;
-
-
-      // try {
-      //   const response = await fetch(`http://localhost:5000/api/school-details/${user.id}`);
-      //   const data = await response.json();
-      //   setUser({ full_name: data.schoolName,role:data.role} );
-      // } catch (err) {
-      //   console.error("Error fetching school name:", err);
-      // }
-      setUser({ full_name: user.schoolName, role: user.role });
-
-    };
-    fetchSchoolDetails();
-  }, []);
-
 
   return (
     <div className="profile-container">
       <header className="profile-header">
-        {/* <h1>My Profile</h1>
-        <div className="user-info">
-          <img src={men} alt="User Avatar" className="avatar" />
-          <div className="user-details">
-            <span className="user-name">Sourabh</span>
-            <span className="user-status">sourabhprajapati920@gmail.com</span>
-          </div>
-        </div> */}
         {user.role === 'school' && (
           <div className="user-info">
             <h1>School Dashboard</h1>
             <div className="user-details">
               <span className="user-name">{user.full_name}</span>
-              {/* <span className="user-status">{user.email}</span> */}
             </div>
           </div>
         )}
@@ -386,16 +477,15 @@ const SchoolProfile = () => {
             onClick={() => setActiveTab('total Student')}
           >
             <FaChildReaching size={24} />
-            <span>total Student</span>
+            <span>Total Student</span>
           </button>
           <button
-            className={`nav-button ${activeTab === 'My order ' ? 'active' : ''}`}
+            className={`nav-button ${activeTab === 'My order' ? 'active' : ''}`}
             onClick={() => setActiveTab('My order')}
           >
             <CgShoppingCart size={24} />
-            <span>My order</span>
+            <span>My Order</span>
           </button>
-
           <button
             className={`nav-button ${activeTab === 'coupons' ? 'active' : ''}`}
             onClick={() => setActiveTab('coupons')}
@@ -403,10 +493,6 @@ const SchoolProfile = () => {
             <Ticket size={24} />
             <span>Coupons</span>
           </button>
-
-
-
-
           <button
             className={`nav-button ${activeTab === 'wishlist' ? 'active' : ''}`}
             onClick={() => setActiveTab('wishlist')}
@@ -414,15 +500,6 @@ const SchoolProfile = () => {
             <Heart size={24} />
             <span>Wishlist</span>
           </button>
-          <button
-            className={`nav-button ${activeTab === 'addressBook' ? 'active' : ''}`}
-            onClick={() => setActiveTab('addressBook')}
-          >
-            <MapPin size={24} />
-            <span>Address Book</span>
-          </button>
-
-
           <button
             className={`nav-button ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
@@ -437,13 +514,13 @@ const SchoolProfile = () => {
             <Bell size={24} />
             <span>Manage Notifications</span>
           </button>
-
         </nav>
         <main className="main-content">
           {renderContent()}
         </main>
       </div>
-    </div>)
-}
+    </div>
+  );
+};
 
-export default SchoolProfile
+export default SchoolProfile;

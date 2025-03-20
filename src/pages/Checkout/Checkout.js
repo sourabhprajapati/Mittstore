@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  const { cartItems } = useCart();
+  const { cartItems, setCartItems } = useCart(); // Ensure setCartItems is destructured
   const { user } = useAuth();  // Changed from currentUser to user
   const [coupon, setCoupon] = useState("");
   const user1 = JSON.parse(localStorage.getItem("user"));
@@ -167,7 +167,7 @@ const Checkout = () => {
         couponCode: couponApplied ? coupon : null,
         cartItems: cartItems // Pass the entire cart
       });
-      
+    
       // alert(response.data.message);
       // Reset form after successful checkout
       navigate("/OrderSuccess");
@@ -175,9 +175,10 @@ const Checkout = () => {
       setCoupon("");
       setCouponApplied(false);
       setAdditionalDiscount(0);
-      // Clear cart functionality would typically be called here
+      setCartItems([]);
+      localStorage.removeItem("cartItems");
       // clearCart();
-    } catch (error) {
+    } catch (error) { 
       alert(error.response?.data?.error || "Failed to process order");
     } finally {
       setLoading(false);

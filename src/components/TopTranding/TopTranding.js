@@ -1,58 +1,87 @@
 import React, { useEffect, useState } from "react";
 import "./TopTranding.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
-import { useCart } from "../context/CartContext"; // Import the cart context
+import { useCart } from "../context/CartContext";
+
+const generateSlug = (name) => {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')  // Remove special characters
+    .replace(/[\s_-]+/g, '-')  // Replace spaces/underscores with hyphens
+    .replace(/^-+|-+$/g, '')   // Trim hyphens from both ends
+    .substring(0, 200);        // Increased length limit
+};
 
 const TopTranding = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const { addToCart } = useCart(); // Use the cart context
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    setLoading(true);
-    fetch("http://localhost:5000/api/products/top-trending")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setProducts(data.data);
-        } else {
-          console.error("API returned an error:", data.message);
-          setProducts([]);
-        }
-      })
-      .catch((error) => console.error("Error fetching trending products:", error))
-      .finally(() => setLoading(false));
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products/top-trending");
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        const productsData = data.data || data.products || data;
+
+        if (!Array.isArray(productsData)) throw new Error("Invalid products data format");
+
+        const formattedProducts = productsData.map(product => ({
+          ...product,
+          id: product.id || product._id,
+          slug: product.slug || generateSlug(product.name),
+          price: Number(product.price),
+          discount_percentage: Number(product.discount_percentage) || 0,
+          debugSlug: product.slug ? 'from-api' : 'generated' // For debugging
+        }));
+
+        console.log('Processed products:', formattedProducts);
+        setProducts(formattedProducts);
+      } catch (error) {
+        console.error("Fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  // Function to handle product click - opens product detail
-  const handleProductClick = (productId) => {
-    window.open(`http://localhost:3000/productdetail/${productId}`, '_blank');
-  };
-
-  // Function to add product to cart and navigate to checkout
   const handleAddToCart = async (product, event) => {
     event.preventDefault();
     event.stopPropagation();
-    
-    const success = await addToCart(product);
-    if (success) {
-        alert("Item added to cart!");
-        // navigate("/cart"); // Redirect to the cart page
-    } else {
-        alert("Failed to add item to cart!");
+  
+    try {
+      const mrp = product.discount_percentage > 0 
+        ? product.price / (1 - product.discount_percentage / 100)
+        : product.price;
+  
+      const success = await addToCart({
+        ...product,
+        price: Number(product.price),
+        images: product.images?.[0] || "/placeholder.jpg",
+        mrp: mrp.toFixed(2)
+      });
+  
+      alert(success ? "Item added to cart!" : "Failed to add item!");
+    } catch (error) {
+      console.error("Cart error:", error);
+      alert("Error adding to cart");
     }
   };
 
   return (
     <div className="top-categorish">
       <h1 className="title">Top Trending</h1>
-      
+
       {loading ? (
         <div className="loading">Loading trending products...</div>
       ) : products.length === 0 ? (
@@ -64,39 +93,65 @@ const TopTranding = () => {
           pagination={{ clickable: true }}
           breakpoints={{
             640: { slidesPerView: 2, spaceBetween: 20 },
-            768: { slidesPerView: 2, spaceBetween: 40 },
-            1024: { slidesPerView: 3, spaceBetween: 50 },
-            1200: { slidesPerView: 4, spaceBetween: 50 },
-            1600: { slidesPerView: 5, spaceBetween: 50 },
+            768: { slidesPerView: 3, spaceBetween: 30 },
+            1024: { slidesPerView: 4, spaceBetween: 40 },
           }}
           navigation={true}
           modules={[Pagination, Navigation]}
           className="mySwiper"
         >
-          {products.map((product) => (
-            <SwiperSlide key={product.id || product._id}>
-              <Link to={`/product/${product.name}`} className="product-image-link">
-                <img 
-                  src={product.images && product.images.length > 0 
-                    ? product.images[0] 
-                    : "/placeholder.jpg"} 
-                  alt={product.name}
-                  onError={(e) => {
-                    console.log("Image failed to load:", e.target.src);
-                    e.target.src = "/placeholder.jpg";
-                  }}
-                />
-              </Link>
-              <div
-                className="product-name-link" 
-                onClick={() => handleProductClick(product.id || product._id)}
-              >
-                <p>{product.short_description || product.name}</p>
-              </div>
-              <h5>₹{product.price} <span>M.R.P: <del>₹{(product.price * 1.3).toFixed(2)}</del></span> (30% off)</h5>
-              <button onClick={(e) => handleAddToCart(product, e)}>Add to cart</button>
-            </SwiperSlide>
-          ))}
+          {products.map((product) => {
+            const hasDiscount = product.discount_percentage > 0;
+            const originalPrice = hasDiscount
+              ? (product.price / (1 - product.discount_percentage / 100)).toFixed(2)
+              : null;
+
+            return (
+              <SwiperSlide key={product.id}>
+                <div className="product-card">
+                  <Link 
+                    to={`/product/${encodeURIComponent(product.slug)}`} 
+                    className="product-image-link"
+                  >
+                    <img
+                      src={product.images?.[0] || "/placeholder.jpg"}
+                      alt={product.name}
+                      onError={(e) => e.target.src = "/placeholder.jpg"}
+                    />
+                  </Link>
+                  
+                  <div className="product-details">
+                    <h3>{product.name}</h3>
+                    <div className="price-container">
+                      <span className="current-price">
+                        ₹{product.price.toFixed(2)}
+                      </span>
+                      {hasDiscount && (
+                        <>
+                          <span className="original-price">
+                            <del>₹{originalPrice}</del>
+                          </span>
+                          <div className="discount-badge">
+                            ({product.discount_percentage}% OFF)
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <Link 
+                    to={`/product/${encodeURIComponent(product.slug)}`} 
+                  >
+                  <button 
+                    className="add-to-cart-btn"
+                    // onClick={(e) => handleAddToCart(product, e)}
+                  >
+                    View Details
+                  </button>
+                  </Link>
+                </div>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       )}
     </div>

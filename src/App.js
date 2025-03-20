@@ -41,8 +41,7 @@ function App() {
        <Route path='/cart' element={<Cart/>}/>
        <Route path='/checkout' element={<Checkout/>}/>
        <Route path='/product' element={<Productpage/>}/>
-       <Route path='/productdetail' element={<ProductDetailpage/>}/>
-       
+       <Route path="/product/:slug" element={<ProductDetailpage />} />       
        <Route path='/enquiryform' element={<EnquiryForm/>}/>
        <Route path='/form' element={<Form/>}/>
        <Route path='/leader' element={<Leader/>}/>

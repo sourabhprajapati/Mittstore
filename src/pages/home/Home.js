@@ -94,8 +94,8 @@ function Home() {
           <img src="https://mittstore.com/cdn/shop/files/Website_1536x500px_2.jpg?v=1740646953" alt="" />
         </SwiperSlide>
       </Swiper>
-       <TopTranding/>
-       <HotDeal/>
+      <TopTranding />
+      <HotDeal />
       <div className="mittsure-container">
         <div className="container1">
           <img src={poster} alt="" />
@@ -162,6 +162,16 @@ function Home() {
           </div>
         </div>
       </div>
+      <div className="video-container">
+        <video
+          src="https://mittstore.com/cdn/shop/videos/c/vp/30a58a53e5ec4dc98492115906cdbd00/30a58a53e5ec4dc98492115906cdbd00.SD-480p-1.5Mbps-43376959.mp4?v=0"
+          // controls
+          autoPlay
+          loop
+          muted
+          className="full-width-video"
+        />
+      </div>
       <div className="about">
         <img src={kids} alt="kids" />
         <div className="about-container">
@@ -178,30 +188,30 @@ function Home() {
         </div>
       </div>
       <div className="detail">
-           <div className="detailCard">
-              <img src={trust} alt="trusted"  />
-              <h5>Trusted platform</h5>
-              <p>Provide security capabilites</p>
-           </div>
-           <div className="detailCard">
-              <img src={secure} alt="trusted"  />
-              <h5>Secure Payment</h5>
-              <p>We ensure secure payment</p>
-           </div>
-           <div className="detailCard">
-           <img src={customer} alt="trusted"  />
-              <h5>Become a Mittsure customer</h5>
-              <p>It's intuitive,and it helps you leverage<br/> 
-              every money you spend</p>
-           </div>
-           <div className="detailCard">
-               <img src={support} alt="trusted"  />
-              <h5>Customer Support </h5>
-              <p>Call or email us 24/7</p>
-           </div>
+        <div className="detailCard">
+          <img src={trust} alt="trusted" />
+          <h5>Trusted platform</h5>
+          <p>Provide security capabilites</p>
+        </div>
+        <div className="detailCard">
+          <img src={secure} alt="trusted" />
+          <h5>Secure Payment</h5>
+          <p>We ensure secure payment</p>
+        </div>
+        <div className="detailCard">
+          <img src={customer} alt="trusted" />
+          <h5>Become a Mittsure customer</h5>
+          <p>It's intuitive,and it helps you leverage<br />
+            every money you spend</p>
+        </div>
+        <div className="detailCard">
+          <img src={support} alt="trusted" />
+          <h5>Customer Support </h5>
+          <p>Call or email us 24/7</p>
+        </div>
       </div>
-      <Clients/>
-      <Footer/>
+      <Clients />
+      <Footer />
     </div>
   );
 }

@@ -1,86 +1,44 @@
-import React, { useState,useContext } from "react";
-import { ShoppingCart, Heart, Search, Menu, X } from "lucide-react";
+
+import React, { useState, useEffect, useContext } from "react";
+import { ShoppingCart, Heart } from "lucide-react";
 import "./Productpage.css";
 import Header from "../../components/header/Header";
-import acdamic from "../../assets/Academicmaterials.jpg";
-import schoolsupplies from "../../assets/SchoolSupplies.jpg";
-import ToysGames from "../../assets/ToyGames.jpg";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../components/context/CartContext";
 import { SearchContext } from "../../context/SearchContext";
 
-const products = [
-  {
-    id: 1,
-    name: "Textbooks & Workbooks",
-    price: 160,
-    image: acdamic,
-    description:
-      "Comprehensive resources that provide in-depth theoretical knowledge on a subject.",
-    category: "Academic Materials",
-  },
-  {
-    id: 2,
-    name: "Stationery",
-    price: 199,
-    image: schoolsupplies,
-    description: " Essential tools and supplies for writing.",
-    category: "School Supplies",
-  },
-  {
-    id: 3,
-    name: "Educational Toys",
-    price: 129,
-    image: ToysGames,
-    description:
-      "Engaging and entertaining items designed to inspire creativity, promote learning, and provide fun for children and adults alike.",
-    category: "Toys & Games",
-  },
-  {
-    id: 4,
-    name: "Smart Home Speaker",
-    price: 299,
-    image:
-      "https://images.unsplash.com/photo-1543512214-318c7553f230?auto=format&fit=crop&q=80&w=600",
-    description: "360° sound with voice assistant integration.",
-    category: "Electronics",
-  },
-  {
-    id: 5,
-    name: "Premium Backpack",
-    price: 89,
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=600",
-    description: "Water-resistant design with laptop compartment.",
-    category: "Accessories",
-  },
-  {
-    id: 6,
-    name: "Wireless Keyboard",
-    price: 149,
-    image:
-      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=600",
-    description: "Mechanical switches with customizable RGB.",
-    category: "Electronics",
-  },
-];
-
-const categories = [...new Set(products.map((p) => p.category))];
 const Productpage = () => {
-  // const [cartItems, setCartItems] = useState(0);
+  const [products, setProducts] = useState([]);
   const [favorites, setFavorites] = useState(new Set());
   const [selectedCategory, setSelectedCategory] = useState(null);
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { searchTerm ,setSearchTerm} = useContext(SearchContext);
-  // const navigate = useNavigate();
+  const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const { addToCart } = useCart();
-  // const handleCardClick = (path) => {
-  //   navigate(path);
-  // };
-  // const addToCart = () => {
-  //   setCartItems(prev => prev + 1);
-  // };
+  const navigate = useNavigate();
 
+  // ✅ Fetch products from backend
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/products");
+      const data = await response.json();
+      console.log(data)
+      if (data.success) {
+        setProducts(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  // ✅ Navigate to Product Detail Page using slug
+  const handleNavigate = (slug) => {
+    navigate(`/product/${slug}`);
+  };
+
+  // ✅ Add to Favorites/Wishlist
   const toggleFavorite = (productId) => {
     setFavorites((prev) => {
       const newFavorites = new Set(prev);
@@ -93,6 +51,7 @@ const Productpage = () => {
     });
   };
 
+  // ✅ Filter Products based on Search and Category
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -101,6 +60,9 @@ const Productpage = () => {
       !selectedCategory || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  // ✅ Dynamic Categories
+  const categories = [...new Set(products.map((p) => p.category))];
 
   return (
     <div className="app-container1">
@@ -118,34 +80,44 @@ const Productpage = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`category-pill1 ${
-                selectedCategory === category ? "active" : ""
-              }`}
+              className={`category-pill1 ${selectedCategory === category ? "active" : ""
+                }`}
             >
               {category}
             </button>
           ))}
         </div>
 
+        {/* ✅ Product Listing */}
         <div className="products-grid1">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="product-card1">
+            <div
+              key={product.id}
+              className="product-card1"
+              onClick={() => handleNavigate(product.slug)}
+            >
               <div className="product-image-container1">
                 <img
-                  src={product.image}
+                  src={
+                    product.images && product.images.split(',')[0]
+                      ? `http://localhost:5000/${product.images.split(',')[0].trim()}`
+                      : "/placeholder.jpg"
+                  }
                   alt={product.name}
                   className="product-image1"
                 />
-                <button
-                  onClick={() => toggleFavorite(product.id)}
+                {/* <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(product.id);
+                  }}
                   className="favorite-button1"
                 >
                   <Heart
-                    className={`favorite-icon1 ${
-                      favorites.has(product.id) ? "active" : ""
-                    }`}
+                    className={`favorite-icon1 ${favorites.has(product.id) ? "active" : ""
+                      }`}
                   />
-                </button>
+                </button> */}
                 <div className="category-tag1">
                   <span>{product.category}</span>
                 </div>
@@ -153,13 +125,35 @@ const Productpage = () => {
 
               <div className="product-details1">
                 <h3 className="product-title1">{product.name}</h3>
-                <p className="product-description1">{product.description}</p>
+                {/* <p className="product-description1">{product.short_description}</p> */}
                 <div className="product-footer1">
-                  <span className="price-tag1">₹{product.price}</span>
+                  <div className="price-container1">
+                    <span className="current-price1">
+                      ₹{product.price}
+                    </span>
+                    {product.discount_percentage > 0 && (
+                      <span className="original-price1">
+                        <del>₹{(
+                          product.price /
+                          (1 - product.discount_percentage / 100)
+                        ).toFixed(2)}</del>
+                      </span>
+                    )}
+                    {product.discount_percentage > 0 && (
+                      <div className="discount-badge1">
+                        ({product.discount_percentage}% OFF)
+                      </div>
+                    )}
+                  </div>
                   <button
-                    onClick={() => {
-                      console.log("Adding to cart:", product); // Debugging log
-                      addToCart(product);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart({
+                        ...product,
+                        price: Number(product.price), // Ensure price is a number
+                        images: product.images ? product.images.split(',')[0] : "/placeholder.jpg", // Ensure the image is properly formatted
+                      });
+                      
                     }}
                     className="add-to-cart-button1"
                   >
