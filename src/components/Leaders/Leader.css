@@ -1,89 +1,257 @@
+/* Leader.css */
 .team-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 30%, #6dd5ed 70%, #ffffff 100%);
+    padding: 80px 20px;
+    font-family: 'Cinzel', serif;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Layered Light Effect */
+.team-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(173, 216, 230, 0.2), transparent 60%);
+    opacity: 0.6;
+    z-index: 0;
+}
+
+/* Team Header - Elegant Spotlight */
+.team-header {
     text-align: center;
-    padding: 50px;
-    background: linear-gradient(135deg, #013770, white);
-    overflow-x: hidden;
+    margin-bottom: 100px;
+    position: relative;
+    z-index: 1;
 }
 
 .team-header h1 {
-    font-size: 3.5rem;
-    margin-bottom: 30px;
-    color:white;
-    font-weight: 800;
+    font-size: 5.5rem;
+    font-weight: 700;
+    color: #f4c430; /* Golden Yellow */
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    text-shadow: 0 5px 15px rgba(244, 196, 48, 0.5);
+    position: relative;
+    animation: shine 4s infinite ease-in-out;
 }
 
-/* Chairman - Takes full width */
-.chairman-card {
-    background: #fff;
-    padding: 20px;
+.team-header h1::after {
+    content: 'Masters of Destiny';
+    display: block;
+    font-size: 1.8rem;
+    color: #e3e3e3;
+    font-family: 'Lora', serif;
+    font-weight: 400;
+    margin-top: 15px;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+}
+
+  
+  /* Chairman Card - The Crown Jewel */
+  .chairman-card {
+    max-width: 1100px;
+    margin: 0 auto 80px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #ffd700;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 215, 0, 0.2);
+    padding: 50px;
     text-align: center;
-    width: 50%;
-    margin: 0 auto 30px;
-}
-
-/* Directors - Appear in a row */
-.directors-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.director-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 40%;
-}
-
-/* Common Styles */
-.team-photo {
-    width: 150px;
-    height: 150px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.5s ease;
+  }
+  
+  .chairman-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 100px rgba(255, 215, 0, 0.4);
+    border-color: #fff;
+  }
+  
+  .chairman-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+  }
+  
+  .chairman-card:hover::before {
+    opacity: 1;
+  }
+  
+  .team-photo {
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 15px;
-}
-
-.role {
-    font-weight: bold;
-    color: #007bff;
-}
-
-.description {
-    font-size: 14px;
-    color: #666;
-}
-
-.social-icons {
-    margin-top: 15px;
-}
-
-.social-icons i {
-    font-size: 20px;
-    margin: 0 10px;
-    color: #555;
+    margin-bottom: 30px;
+    border: 8px solid #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    transition: all 0.5s ease;
+  }
+  
+  .chairman-card:hover .team-photo {
+    border-color: #fff;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+  }
+  
+  .chairman-card h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 0 3px 12px rgba(255, 215, 0, 0.5);
+    margin: 20px 0;
+  }
+  
+  .role {
+    font-size: 1.9rem;
+    color: #ffd700;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+    margin-bottom: 25px;
+  }
+  
+  .description {
+    font-size: 1.4rem;
+    color: #d4d4d4;
+    line-height: 1.9;
+    font-family: 'Lora', serif;
+    margin-bottom: 30px;
+    font-style: italic;
+  }
+  
+  /* Social Icons - Golden Orbs */
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+  }
+  
+  .social-icons i {
+    font-size: 2.3rem;
+    color: #ffd700;
     cursor: pointer;
-}
-
-.social-icons i:hover {
-    color: #007bff;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .chairman-card {
-        width: 80%;
+    transition: all 0.4s ease;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  
+  .social-icons i:hover {
+    color: #fff;
+    transform: scale(1.3) translateY(-5px);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+  
+  /* Directors Container - Elite Circle */
+  .directors-container {
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .director-card {
+    width: 500px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+    padding: 40px;
+    text-align: center;
+    transition: all 0.5s ease;
+    animation: fadeRise 1.5s ease-in-out;
+  }
+  
+  .director-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.3);
+    border-color: #fff;
+  }
+  
+  .director-card .team-photo {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .director-card:hover .team-photo {
+    border-color: #fff;
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.7);
+    transform: scale(1.1);
+  }
+  
+  .director-card h1 {
+    font-size: 2.6rem;
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 3px 12px rgba(255, 215, 0, 0.5);
+  }
+  
+  /* Animations */
+  @keyframes shine {
+    0%, 100% { text-shadow: 0 5px 15px rgba(255, 215, 0, 0.5); }
+    50% { text-shadow: 0 5px 25px rgba(255, 215, 0, 0.8); }
+  }
+  
+  @keyframes fadeRise {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Luxe Quote */
+  .chairman-card::after {
+    content: '"Greatness is not a gift—it’s a choice."';
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.6rem;
+    color: #ffd700;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    text-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .team-header h1 {
+      font-size: 4rem;
     }
-    .directors-container {
-        flex-direction: column;
-        align-items: center;
+  
+    .team-header h1::after {
+      font-size: 1.3rem;
     }
+  
+    .chairman-card,
     .director-card {
-        width: 80%;
+      width: 90%;
+      margin: 0 auto 60px;
     }
-}
+  
+    .directors-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .team-photo {
+      width: 240px;
+      height: 240px;
+    }
+  }
