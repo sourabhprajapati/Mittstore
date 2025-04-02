@@ -20,7 +20,10 @@ const SchoolProfile = () => {
   const [wishlistError, setWishlistError] = useState(null);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersError, setOrdersError] = useState(null);
-  // Add formData state for settings
+  const [coupons, setCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [couponsError, setCouponsError] = useState(null);
+  const [rewardPoints, setRewardPoints] = useState(0);
   const [formData, setFormData] = useState({
     schoolName: '',
     email: '',
@@ -39,28 +42,27 @@ const SchoolProfile = () => {
 
   const handleRemoveFromWishlist = async (productId) => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
+
     if (!storedUser || !storedUser.id) return;
 
     try {
       await axios.post('http://localhost:5000/api/wishlist/remove', {
         userId: storedUser.id,
-        productId: productId
+        productId: productId,
       });
-      setWishlist(prevWishlist => prevWishlist.filter(item => item.id !== productId));
+      setWishlist((prevWishlist) => prevWishlist.filter((item) => item.id !== productId));
       setWishlistError(null);
     } catch (error) {
       console.error('Error removing from wishlist:', error);
       setWishlistError('Failed to remove item from wishlist. Please try again.');
     }
   };
-
   useEffect(() => {
     const fetchUserDetailsAndData = async () => {
       const storedUser = JSON.parse(localStorage.getItem('user'));
-      if (!storedUser || !storedUser.email) return;
-
-      setUser({ full_name: storedUser.schoolName, role: storedUser.role });
-      // Populate formData with initial values
+      if (!storedUser || !storedUser.id) return;
+      console.log('Stored User:', storedUser);
+      setUser({ full_name: storedUser.schoolName || storedUser.full_name, role: storedUser.role });
       setFormData({
         schoolName: storedUser.schoolName || '',
         email: storedUser.email || '',
@@ -68,6 +70,33 @@ const SchoolProfile = () => {
         confirmPassword: '',
       });
 
+      try {
+        let schoolId;
+        console.log("Stored User:", storedUser);
+        console.log("Role:", storedUser.role);
+        console.log("Fetching schoolId for userId:", storedUser.id);
+        if (storedUser.role === 'school') {
+          const schoolResponse = await axios.get(`http://localhost:5000/api/school-details/${storedUser.id}`);
+          schoolId = schoolResponse.data.id || storedUser.id; // Assuming school-details returns school_id
+        } else if (storedUser.role === 'student') {
+          const studentResponse = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
+          schoolId = studentResponse.data.school_id;
+        }
+
+        if (schoolId) {
+          const pointsResponse = await axios.get(`http://localhost:5000/api/schools/${schoolId}/points`);
+          console.log("Reward Points:", pointsResponse.data.reward_points);
+          setRewardPoints(pointsResponse.data.reward_points);
+        } else {
+          console.log("No schoolId found, setting points to 0");
+          setRewardPoints(0);
+        }
+      } catch (error) {
+        console.error("Error fetching reward points:", error);
+        setRewardPoints(0);
+      }
+
+      // Fetch orders
       setOrdersLoading(true);
       try {
         const ordersResponse = await fetch(`http://localhost:5000/api/orders/email/${storedUser.email}`);
@@ -81,12 +110,13 @@ const SchoolProfile = () => {
         setOrdersLoading(false);
       }
 
+      // Fetch wishlist
       setWishlistLoading(true);
       try {
         const wishlistResponse = await axios.get(`http://localhost:5000/api/wishlist/${storedUser.id}`);
-        const formattedWishlist = wishlistResponse.data.map(item => ({
+        const formattedWishlist = wishlistResponse.data.map((item) => ({
           ...item,
-          price: typeof item.price === 'string' ? parseFloat(item.price) : item.price
+          price: typeof item.price === 'string' ? parseFloat(item.price) : item.price,
         }));
         setWishlist(formattedWishlist);
         setWishlistError(null);
@@ -95,6 +125,20 @@ const SchoolProfile = () => {
         setWishlistError('Failed to load wishlist. Please try again later.');
       } finally {
         setWishlistLoading(false);
+      }
+
+      // Fetch coupons based on user_id
+      setCouponsLoading(true);
+      try {
+        const couponsResponse = await axios.get(`http://localhost:5000/api/coupons/user/${storedUser.id}`);
+        console.log('Coupons Response:', couponsResponse.data); // Debug log
+        setCoupons(couponsResponse.data); // Expecting an array of coupons
+        setCouponsError(null);
+      } catch (error) {
+        console.error('Error fetching coupons:', error);
+        setCouponsError('Failed to load coupons. Please try again later.');
+      } finally {
+        setCouponsLoading(false);
       }
     };
 
@@ -107,7 +151,6 @@ const SchoolProfile = () => {
     }
   }, [tabFromUrl]);
 
-  // Add handleSubmit function for settings form
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -135,11 +178,10 @@ const SchoolProfile = () => {
           full_name: formData.schoolName,
           email: formData.email,
         });
-        // Update localStorage if needed
         localStorage.setItem('user', JSON.stringify({
           ...storedUser,
           schoolName: formData.schoolName,
-          email: formData.email
+          email: formData.email,
         }));
       } else {
         alert('Failed to update profile.');
@@ -178,7 +220,7 @@ const SchoolProfile = () => {
                             <img
                               src={firstImage ? `http://localhost:5000/${firstImage}` : '/placeholder.jpg'}
                               alt={item.name || 'Wishlist Item'}
-                              onError={(e) => e.target.src = '/placeholder.jpg'}
+                              onError={(e) => (e.target.src = '/placeholder.jpg')}
                             />
                           </div>
                           <h3>{item.name || 'Unnamed Item'}</h3>
@@ -230,20 +272,34 @@ const SchoolProfile = () => {
         return (
           <div className="content-area">
             <h2><Ticket className="icon" /> My Coupons</h2>
-            <div className="coupon-list">
-              {[
-                { code: 'SUMMER21', discount: '20% off', expiry: '2023-08-31', color: 'coupon-blue' },
-                { code: 'FREESHIP', discount: 'Free Shipping', expiry: '2023-07-15', color: 'coupon-green' },
-                { code: 'SAVE10', discount: '₹10 off ₹50+', expiry: '2023-09-30', color: 'coupon-orange' },
-              ].map((coupon, index) => (
-                <div key={index} className={`coupon-item ${coupon.color}`}>
-                  <h3>{coupon.code}</h3>
-                  <p className="discount">{coupon.discount}</p>
-                  <p className="expiry">Expires: {coupon.expiry}</p>
-                  <button className="btn-secondary">Use Coupon</button>
-                </div>
-              ))}
-            </div>
+            {couponsLoading ? (
+              <p>Loading coupons...</p>
+            ) : couponsError ? (
+              <p>{couponsError}</p>
+            ) : (
+              <div className="coupon-list">
+                {coupons.length === 0 ? (
+                  <p>No coupons available</p>
+                ) : (
+                  coupons.map((coupon, index) => {
+                    const isStudentCoupon = coupon.type === 'student';
+                    const couponColor = isStudentCoupon ? 'coupon-green' : 'coupon-blue';
+                    return (
+                      <div key={index} className={`coupon-item ${couponColor}`}>
+                        <h3>{coupon.code}</h3>
+                        <p className="discount">{coupon.discount_percentage}% off</p>
+                        <p className="expiry">
+                          Valid: {new Date(coupon.valid_from).toLocaleDateString()} -{' '}
+                          {new Date(coupon.valid_until).toLocaleDateString()}
+                        </p>
+                        <p className="type">{isStudentCoupon ? 'Student Coupon' : 'School Coupon'}</p>
+                        <button className="btn-secondary">Use Coupon</button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
           </div>
         );
       case 'redeemPoints':
@@ -253,11 +309,11 @@ const SchoolProfile = () => {
             <div className="points-info">
               <div className="points-balance">
                 <h3>Current Balance</h3>
-                <p className="points">1,500 pts</p>
+                <p className="points">{rewardPoints} pts</p>
               </div>
               <div className="points-value">
                 <h3>Value</h3>
-                <p className="value">₹15.00</p>
+                <p className="value">₹{(rewardPoints / 100).toFixed(2)}</p>
               </div>
             </div>
             <div className="redeem-options">

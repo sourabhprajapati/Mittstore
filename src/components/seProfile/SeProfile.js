@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./SeProfile.css";
 import { Heart, MapPin, Ticket, Gift, Settings, Bell, ShoppingBag, Star, Zap } from 'lucide-react';
-import men from "../../assets/men.jpg";
-import supple from "../../assets/supplies.jpg";
 import { Link } from "react-router-dom";
 import { BiSolidSchool } from "react-icons/bi";
 import axios from 'axios';
@@ -15,26 +13,20 @@ const SeProfile = () => {
     role: '',
     userId: '',
   });
-
   const [selectedSchool, setSelectedSchool] = useState('');
   const [schools, setSchools] = useState([]);
-  const [generatedCoupon, setGeneratedCoupon] = useState(null);
   const [totalSchools, setTotalSchools] = useState([]);
-  
-  // Wishlist states
   const [wishlist, setWishlist] = useState([]);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [wishlistError, setWishlistError] = useState(null);
-
-  // Settings form state
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [redeemPoints, setRedeemPoints] = useState(0); // New state for SE redeem points
 
-  // Function to generate slug (for wishlist)
   const generateSlug = (name) => {
     return name
       .toLowerCase()
@@ -44,7 +36,6 @@ const SeProfile = () => {
       .substring(0, 200);
   };
 
-  // Function to remove item from wishlist
   const handleRemoveFromWishlist = async (productId) => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (!storedUser || !storedUser.id) return;
@@ -70,10 +61,10 @@ const SeProfile = () => {
           console.error("SE ID not found in localStorage.");
           return;
         }
-  
+
         const response = await fetch(`http://localhost:5000/api/se-details/${seId}`);
         const data = await response.json();
-  
+
         if (data.seDetails) {
           const userData = {
             full_name: `${data.seDetails.first_name} ${data.seDetails.last_name}`,
@@ -82,21 +73,24 @@ const SeProfile = () => {
             userId: data.seDetails.employee_id,
           };
           setUser(userData);
-          // Initialize formData with user details
           setFormData({
             fullName: userData.full_name || '',
             email: userData.email || '',
             password: '',
             confirmPassword: '',
           });
+
+          // Fetch SE redeem points
+          const pointsResponse = await axios.get(`http://localhost:5000/api/se/${seId}/points`);
+          setRedeemPoints(pointsResponse.data.redeem_points || 0);
         } else {
           console.error("SE details not found.");
         }
       } catch (error) {
-        console.error("Error fetching SE details:", error);
+        console.error("Error fetching SE details or points:", error);
       }
     };
-  
+
     fetchUserData();
   }, []);
 
@@ -113,7 +107,7 @@ const SeProfile = () => {
   useEffect(() => {
     fetchSchools();
   }, []);
-  
+
   const fetchTotalSchools = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/total-schools");
@@ -123,12 +117,11 @@ const SeProfile = () => {
       console.error("Error fetching total schools:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchTotalSchools();
   }, []);
 
-  // Fetch wishlist data
   useEffect(() => {
     const fetchWishlist = async () => {
       const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -189,7 +182,6 @@ const SeProfile = () => {
     }
   };
 
-  // Handle settings form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -217,7 +209,6 @@ const SeProfile = () => {
           full_name: formData.fullName,
           email: formData.email,
         });
-        // Update localStorage if needed
         localStorage.setItem('user', JSON.stringify({
           ...storedUser,
           fullName: formData.fullName,
@@ -307,14 +298,6 @@ const SeProfile = () => {
               <button className="btn-primary" onClick={generateCoupon} disabled={!selectedSchool}>
                 Generate Coupon
               </button>
-              {generatedCoupon && (
-                <div className="coupon-details">
-                  <h3>Coupon Code: {generatedCoupon.code}</h3>
-                  <p>Discount: {generatedCoupon.discount}</p>
-                  <p>Expires on: {generatedCoupon.expiry}</p>
-                  <p>School: {generatedCoupon.school}</p>
-                </div>
-              )}
             </div>
           </div>
         );
@@ -355,11 +338,11 @@ const SeProfile = () => {
             <div className="points-info">
               <div className="points-balance">
                 <h3>Current Balance</h3>
-                <p className="points">1,500 pts</p>
+                <p className="points">{redeemPoints} pts</p>
               </div>
               <div className="points-value">
                 <h3>Value</h3>
-                <p className="value">₹15.00</p>
+                <p className="value">₹{(redeemPoints / 100).toFixed(2)}</p>
               </div>
             </div>
             <div className="redeem-options">
