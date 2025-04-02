@@ -563,13 +563,7 @@ const SchoolProfile = () => {
             <Settings size={24} />
             <span>Settings</span>
           </button>
-          <button
-            className={`nav-button ${activeTab === 'manageNotifications' ? 'active' : ''}`}
-            onClick={() => setActiveTab('manageNotifications')}
-          >
-            <Bell size={24} />
-            <span>Manage Notifications</span>
-          </button>
+          
         </nav>
         <main className="main-content">
           {renderContent()}
